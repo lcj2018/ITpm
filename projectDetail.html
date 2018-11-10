@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+        <meta charset="utf-8">
+        <title>项目详情</title>
+        <meta http-equiv="content-type" content="text/html" charset="utf-8" />
+        <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+        <link type="text/css" rel="stylesheet" href="./css/style.css" />
+        <link type="text/css" rel="stylesheet" href="./css/projectManagement.css" />
+        <script type="text/javascript" src="https://cdn.staticfile.org/vue/2.2.2/vue.min.js"></script>
+        <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.1.0/css/bootstrap.min.css">
+        <script src="https://cdn.staticfile.org/jquery/3.2.1/jquery.min.js"></script>
+        <script src="https://cdn.staticfile.org/popper.js/1.12.5/umd/popper.min.js"></script>
+        <script src="https://cdn.staticfile.org/twitter-bootstrap/4.1.0/js/bootstrap.min.js"></script>
+        <script src="https://cdn.staticfile.org/vue-resource/1.5.1/vue-resource.min.js"></script>
+</head>
+<body>
+<div class='container-fluid'>
+    <div class='row page-title'>
+        <div class='col pt-left'>
+            <p class='pt-left'>项目开发管理系统</p>
+        </div>
+        <div class='col'>
+            <p id='user' class='pt-right'>{{username}}&nbsp;&nbsp;<a href='#'>退出</a></p>
+        </div>
+    </div>
+</div>
+<div id='wrapper' class='container-fluid' style='background: linear-gradient(#9999FF 0%,#009DD9 100%);'>
+    <br/>
+    <div class='row' style='color: white;font-size: 2rem;'>
+        <div class='col'></div>
+        <div class='col'><a href='./teamManagement.html'>团队</a></div>
+        <div class='col'>项目</div>
+        <div class='col' style='color: #00FFCC;'>账户</div>
+        <div class='col'></div>
+        <div class='col'></div>
+    </div>
+    <div class='row'>
+        <div id='vueProject' class='container box'>
+            <!-- 任务 -->
+            <br/>
+            <div class='row' style='font-size: 1.5rem;'>
+                <div class='col'><strong>任务</strong></div>
+            </div>
+            <div class='row'>
+                <div v-for='item in project.tasks'>
+                    <div class='square'>
+                        <div style='position:relative;top:20%;'><img src='./image/projectDetail/task.png' alt='task' /></div>
+                        <div style='position:relative;top:40%;'>{{item.name}}</div>
+                    </div>
+                </div>
+                <div class='square' style='border-style: dashed;'>
+                    <div style='position:relative;top:35%;'><img src='./image/projectDetail/add.png' alt='add' /></div>
+                </div>
+            </div>
+            <!-- 成员 -->
+            <br/>
+            <div class='row' style='font-size: 1.5rem;'>
+                <div class='col'><strong>成员</strong></div>
+            </div>
+            <div class='row'>
+                <div v-for='item in project.members'>
+                    <div class='square'>
+                        <div style='position:relative;top:20%;'><img src='./image/projectDetail/member.png' alt='member' /></div>
+                        <div style='position:relative;top:30%;'>{{item.name}}</div>
+                    </div>
+                </div>
+                <div class='square' style='border-style: dashed;'>
+                    <div style='position:relative;top:35%;'><img src='./image/projectDetail/add.png' alt='add' /></div>
+                </div>
+            </div>
+            <!-- 讨论 -->
+            <br/>
+            <div class='row' style='font-size: 1.5rem;'>
+                <div class='col'><strong>讨论</strong></div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+<script>
+    $(document).ready(function() {
+        $('#wrapper').css('height',screen.availHeight.toString());
+        getProject(123);
+    })
+
+    function getProject(projectId) {
+        var p = new Vue ({
+            el: '#vueProject',
+            data: {
+                project: ''
+            },
+            methods:{
+                post:function(){
+                    this.$http.post('http://110.64.91.103/test/getProject.php',{projectId: projectId},{emulateJSON: true}).then(function(res){
+                        this.project = res.body.project;
+                    },function(res){
+                        console.log(res.status);
+                    })
+                }
+            }
+        })
+        p.post();
+    }
+</script>
+</html>
