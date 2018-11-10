@@ -1,0 +1,23 @@
+.page-title {
+    background: #5E5E5E;
+    color: white;
+}
+
+.pt-left {
+    float: left;
+    display: flex;
+    position: relative;
+    font-size: 2rem;
+}
+
+.pt-right {
+    float: right;
+    display: flex;
+    position: relative;
+    font-size: 1rem;
+}
+
+.box {
+    background: white;
+    border-radius: 10px;
+}

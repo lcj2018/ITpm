@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+        <meta charset="utf-8">
+        <title>团队</title>
+        <meta http-equiv="content-type" content="text/html" charset="utf-8" />
+        <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+        <link type="text/css" rel="stylesheet" href="css/style.css" />
+        <link type="text/css" rel="stylesheet" href="css/teamManagement.css" />
+        <script type="text/javascript" src="https://cdn.staticfile.org/vue/2.2.2/vue.min.js"></script>
+        <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.1.0/css/bootstrap.min.css">
+        <script src="https://cdn.staticfile.org/jquery/3.2.1/jquery.min.js"></script>
+        <script src="https://cdn.staticfile.org/popper.js/1.12.5/umd/popper.min.js"></script>
+        <script src="https://cdn.staticfile.org/twitter-bootstrap/4.1.0/js/bootstrap.min.js"></script>
+        <script src="https://cdn.staticfile.org/vue-resource/1.5.1/vue-resource.min.js"></script>
+</head>
+<body>
+<div class='container-fluid'>
+    <div class='row page-title'>
+        <div class='col pt-left'>
+            <p class='pt-left'>项目开发管理系统</p>
+        </div>
+        <div class='col'>
+            <p id='user' class='pt-right'>{{username}}&nbsp;&nbsp;<a href='#'>退出</a></p>
+        </div>
+    </div>
+</div>
+<div id='wrapper' class='container-fluid' style='background: linear-gradient(#9999FF 0%,#009DD9 100%);'>
+    <br/>
+    <div class='row' style='color: white;font-size: 2rem;'>
+        <div class='col'></div>
+        <div class='col' style='color: #00FFCC;'>团队</div>
+        <div class='col'>项目</div>
+        <div class='col'>账户</div>
+        <div class='col'></div>
+        <div class='col'></div>
+    </div>
+    <div class='row'>
+        <div id='teamList' class='container box'>
+            <div v-for='index in teamList'>
+                <br/>
+                <div class='row'>
+                    <div class='col'><div class='teambox'>
+                        <div class='container'>
+                            <div class='row'>
+                                <br/><br/>
+                                <div class='col' style='font-size: 1.5rem;'><p>{{index.name}}<font style='color: #CCCCCC'>(共{{index.memberCnt}}人)</p></div>
+                                <div class='col'></div>
+                                <div class='col' v-if='index.leader'>
+                                    <img id='addMem' src='./image/teamManagement/add.png' alt='add' />
+                                    <img id='delTeam' src='./image/teamManagement/del.png' alt='del' />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>  
+        </div>
+        <br/>
+    </div>
+</div>
+<div class="modal fade" id="addMemModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">模态框（Modal）标题</h4>
+            </div>
+            <div class="modal-body">在这里添加一些文本</div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-primary">提交更改</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+<div class="modal fade" id="delTeamModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">模态框（Modal）标题</h4>
+            </div>
+            <div class="modal-body">在这里添加一些文本</div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-primary">提交更改</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+</body>
+<script>
+    $(document).ready(function() {
+        $('#wrapper').css('height',screen.availHeight.toString());
+        getTeamList(123);
+        $('#addMem').click(function(){
+            $('addMemModal').modal('show');
+        })
+        $('#delTeam').click(function(){
+            $('delTeamModal').modal('show');
+        })
+    })
+    var vm = new Vue ({
+        el: '#user',
+        data: {
+            username: 'dadagum'
+        }
+    })
+
+    function getTeamList(srcUserId) {
+        var tl = new Vue ({
+            el: '#teamList',
+            data: {
+                teamList: []
+            },
+            methods:{
+                post:function(){
+                    this.$http.post('http://110.64.91.103/test/getTeamList.php',{userId: srcUserId},{emulateJSON: true}).then(function(res){
+                        this.teamList = res.body.teamList;
+                    },function(res){
+                        console.log(res.status);
+                    })
+                }
+            }
+        })
+        tl.post();
+    }
+
+    function addNewTeam(){
+
+    }
+
+    function delTeam(){
+
+    }
+
+    function addNewMem(){
+
+    }
+
+    function delMem(){
+
+    }
+</script>
+</html>
