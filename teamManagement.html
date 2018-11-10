@@ -14,6 +14,9 @@
         <script src="https://cdn.staticfile.org/popper.js/1.12.5/umd/popper.min.js"></script>
         <script src="https://cdn.staticfile.org/twitter-bootstrap/4.1.0/js/bootstrap.min.js"></script>
         <script src="https://cdn.staticfile.org/vue-resource/1.5.1/vue-resource.min.js"></script>
+        <script>
+            window.count = 0;
+        </script>
 </head>
 <body>
 <div class='container-fluid'>
@@ -37,19 +40,75 @@
         <div class='col'></div>
     </div>
     <div class='row'>
-        <div id='teamList' class='container box'>
-            <div v-for='index in teamList'>
+        <div id='vueTeamList' class='container box'>
+            <div v-for='(item,index) in teamList'>
                 <br/>
                 <div class='row'>
                     <div class='col'><div class='teambox'>
                         <div class='container'>
                             <div class='row'>
                                 <br/><br/>
-                                <div class='col' style='font-size: 1.5rem;'><p>{{index.name}}<font style='color: #CCCCCC'>(共{{index.memberCnt}}人)</p></div>
-                                <div class='col'></div>
-                                <div class='col' v-if='index.leader'>
-                                    <img id='addMem' src='./image/teamManagement/add.png' alt='add' />
-                                    <img id='delTeam' src='./image/teamManagement/del.png' alt='del' />
+                                <!-- <script>
+                                    document.write(window.count);
+                                    window.count=2;
+                                    document.write("<button class='col' data-toggle='collapse' data-target='#"+getId("{{index}}")+"' style='font-size: 1.5rem;'><p>{{item.name}}<font style='color: #CCCCCC'>(共{{item.memberCnt}}人)</font></p></button>");
+                                    document.write("<button class='col' data-toggle='collapse' data-target='#"+getId("{{index}}")+"'></button>");
+
+                                    function getId(index){
+                                        return "showMem"+index.toString();
+                                    }
+                                </script> -->
+                                <!-- v-bind在data-target中失效 暂时无法处理 -->
+                                <div class='col' data-toggle='collapse' data-target="#showMem1" style='font-size: 1.5rem;'><p>{{item.name}}<font style='color: #CCCCCC'>(共{{item.memberCnt}}人)</font></p></div>
+                                <div class='col' data-toggle='collapse' data-target='#showMem1'></div>
+                                <div class='col' style='float: right;text-align: right;' v-if='item.leader=="true"'>
+                                    <img id='addMem' data-toggle="modal" data-target="#addMemModal" src='./image/teamManagement/add.png' alt='addMem' />&nbsp;
+                                    <img id='delTeam' data-toggle="modal" data-target="#delTeamModal" src='./image/teamManagement/del.png' alt='delTeam' />
+                                    <div class="modal fade" id="delTeamModal">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                        
+                                            <div class="modal-header">
+                                                <h4 class="modal-title">退出队伍</h4>
+                                                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                            </div>
+                                        
+                                            <div class="modal-body">
+                                                模态框内容..
+                                            </div>
+                                        
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
+                                            </div>
+                                        
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="modal fade" id="addMemModal">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                        
+                                            <div class="modal-header">
+                                                <h4 class="modal-title">增加成员</h4>
+                                                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                            </div>
+                                        
+                                            <div class="modal-body">
+                                                模态框内容..
+                                            </div>
+                                        
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
+                                            </div>
+                                        
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class='row'>
+                                <div v-bind:id='getId(index)' class='collapse'>
+                                        {{item.name}}
                                 </div>
                             </div>
                         </div>
@@ -60,48 +119,13 @@
         <br/>
     </div>
 </div>
-<div class="modal fade" id="addMemModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4 class="modal-title" id="myModalLabel">模态框（Modal）标题</h4>
-            </div>
-            <div class="modal-body">在这里添加一些文本</div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-                <button type="button" class="btn btn-primary">提交更改</button>
-            </div>
-        </div><!-- /.modal-content -->
-    </div><!-- /.modal -->
-</div>
-<div class="modal fade" id="delTeamModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4 class="modal-title" id="myModalLabel">模态框（Modal）标题</h4>
-            </div>
-            <div class="modal-body">在这里添加一些文本</div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-                <button type="button" class="btn btn-primary">提交更改</button>
-            </div>
-        </div><!-- /.modal-content -->
-    </div><!-- /.modal -->
-</div>
 </body>
 <script>
     $(document).ready(function() {
         $('#wrapper').css('height',screen.availHeight.toString());
         getTeamList(123);
-        $('#addMem').click(function(){
-            $('addMemModal').modal('show');
-        })
-        $('#delTeam').click(function(){
-            $('delTeamModal').modal('show');
-        })
     })
+
     var vm = new Vue ({
         el: '#user',
         data: {
@@ -111,7 +135,7 @@
 
     function getTeamList(srcUserId) {
         var tl = new Vue ({
-            el: '#teamList',
+            el: '#vueTeamList',
             data: {
                 teamList: []
             },
@@ -122,6 +146,9 @@
                     },function(res){
                         console.log(res.status);
                     })
+                },
+                getId:function(index){
+                    return "showMem"+index.toString();
                 }
             }
         })
