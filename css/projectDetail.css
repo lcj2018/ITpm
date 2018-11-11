@@ -1,0 +1,10 @@
+.disscussBox {
+    width: 95%;
+    height: 120px;
+    border-style: solid;
+    border-color: black;
+    border-width: 1px;
+    margin: 1.4rem;
+    font-size:1.3rem;
+    text-align: left;
+}

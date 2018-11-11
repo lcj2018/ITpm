@@ -7,7 +7,7 @@
         <meta http-equiv="content-type" content="text/html" charset="utf-8" />
         <meta name="viewport" content="width=device-width,initial-scale=1.0" />
         <link type="text/css" rel="stylesheet" href="./css/style.css" />
-        <link type="text/css" rel="stylesheet" href="./css/projectManagement.css" />
+        <link type="text/css" rel="stylesheet" href="./css/projectDetail.css" />
         <script type="text/javascript" src="https://cdn.staticfile.org/vue/2.2.2/vue.min.js"></script>
         <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.1.0/css/bootstrap.min.css">
         <script src="https://cdn.staticfile.org/jquery/3.2.1/jquery.min.js"></script>
@@ -51,7 +51,7 @@
                     </div>
                 </div>
                 <div class='square' style='border-style: dashed;'>
-                    <div style='position:relative;top:35%;'><img src='./image/projectDetail/add.png' alt='add' /></div>
+                    <div style='position:relative;top:35%;'><img data-toggle="modal" data-target="#addTaskModal" src='./image/projectDetail/add.png' alt='add' /></div>
                 </div>
             </div>
             <!-- 成员 -->
@@ -75,13 +75,99 @@
             <div class='row' style='font-size: 1.5rem;'>
                 <div class='col'><strong>讨论</strong></div>
             </div>
+            <div class='row'>
+                <div class='col'>
+                    <div class='disscussBox'>
+                        {{project.comments}}
+                    </div>
+                </div>
+            </div>
+            <div class='row'>
+                <div class='col' style='text-align: right;'>
+                    <img data-toggle="modal" data-target="#addDissModal" src='./image/projectDetail/add.png' alt='add' />
+                </div>
+            </div>
+            <!-- 文件 -->
+            <div class='row' style='font-size: 1.5rem;'>
+                <div class='col'><strong>文件</strong></div>
+            </div>
+            <!-- 资源 -->
+            <br/>
+            <div class='row' style='font-size: 1.5rem;'>
+                <div class='col'><strong>资源</strong>&nbsp;&nbsp;<a href='#' alt='查看详情'>查看详情</a></div>
+            </div>
+            <!-- 进度管理 -->
+            <br/>
+            <div class='row' style='font-size: 1.5rem;'>
+                <div class='col'><strong>进度管理</strong>&nbsp;&nbsp;<a href='#' alt='查看详情'>查看详情</a></div>
+            </div>
+            <div class='row' style='font-size: 1.5rem;'>
+                <div class='col'>共计有{{project.progress.total}}项任务，其中过期{{project.progress.out}}项，已完成{{project.progress.completed}}项。</div>
+            </div>
+            <br/>
+            <!-- addTaskModal -->
+            <div class="modal fade" id="addTaskModal">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                
+                    <!-- 模态框头部 -->
+                    <div class="modal-header">
+                        <h4 class="modal-title">创建任务</h4>
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+                
+                    <!-- 模态框主体 -->
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="comment">内容:</label>
+                            <textarea id='dissContent' class="form-control" rows="5"></textarea>
+                        </div>
+                    </div>
+                
+                    <!-- 模态框底部 -->
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-success" onclick='addNewTask()'>提交</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
+                    </div>
+                
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <br/><br/><br/>
+</div>
+</body>
+<div class="modal fade" id="addDissModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+    
+        <!-- 模态框头部 -->
+        <div class="modal-header">
+            <h4 class="modal-title">发表讨论</h4>
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+    
+        <!-- 模态框主体 -->
+        <div class="modal-body">
+            <div class="form-group">
+                <label for="comment">内容:</label>
+                <textarea id='dissContent' class="form-control" rows="5"></textarea>
+            </div>
+        </div>
+    
+        <!-- 模态框底部 -->
+        <div class="modal-footer">
+            <button type="button" class="btn btn-success" onclick='submitDiss()'>发表</button>
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
+        </div>
+    
         </div>
     </div>
 </div>
-</body>
 <script>
     $(document).ready(function() {
-        $('#wrapper').css('height',screen.availHeight.toString());
+        //$('#wrapper').css('height',screen.availHeight.toString());
         getProject(123);
     })
 
@@ -89,7 +175,7 @@
         var p = new Vue ({
             el: '#vueProject',
             data: {
-                project: ''
+                project: '',
             },
             methods:{
                 post:function(){
@@ -102,6 +188,17 @@
             }
         })
         p.post();
+    }
+
+    function submitDiss(){
+        text=$('#dissContent').val();
+        $.post('http://110.64.91.103/test/addDiss.php',{cotent: text},function(res){
+            alert(res);
+        });
+    }
+
+    function addNewTask(){
+        
     }
 </script>
 </html>
