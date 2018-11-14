@@ -119,8 +119,18 @@
                     <!-- 模态框主体 -->
                     <div class="modal-body">
                         <div class="form-group">
-                            <label for="comment">内容:</label>
-                            <textarea id='dissContent' class="form-control" rows="5"></textarea>
+                            <label for="taskName">任务名:</label>
+                            <input id='taskName' type="text" class="form-control" style='width:50%;display:inline;' placeholder="taskName" /><br/><br/>
+                            <label for='startDate'>开始日期：</label>
+                            <input id='startDate' type='text' class='form-control' style='width:30%;display:inline;' placeholder='choose your date' />
+                            &nbsp;<label for='endDate'>结束日期：</label>
+                            <input id='endDate' type='text' class="form-control" style='width:30%;display:inline;' placeholder='choose your date'/>
+                            <script>
+                                $(function() {
+                                    $("#startDate" ).datepicker();
+                                    $('#endDate').datepicker();
+                                });
+                            </script>
                         </div>
                     </div>
                 
@@ -166,6 +176,13 @@
     </div>
 </div>
 <script>
+    var usr = new Vue({
+        el: '#user',
+        data: {
+            username: 'dadagum'
+        }
+    })
+
     $(document).ready(function() {
         //$('#wrapper').css('height',screen.availHeight.toString());
         getProject(123);
