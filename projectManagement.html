@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+        <meta charset="utf-8">
+        <title>团队</title>
+        <meta http-equiv="content-type" content="text/html" charset="utf-8" />
+        <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+        <link type="text/css" rel="stylesheet" href="css/style.css" />
+        <link type="text/css" rel="stylesheet" href="css/teamManagement.css" />
+        <script type="text/javascript" src="https://cdn.staticfile.org/vue/2.2.2/vue.min.js"></script>
+        <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.1.0/css/bootstrap.min.css">
+        <script src="https://cdn.staticfile.org/jquery/3.2.1/jquery.min.js"></script>
+        <script src="https://cdn.staticfile.org/popper.js/1.12.5/umd/popper.min.js"></script>
+        <script src="https://cdn.staticfile.org/twitter-bootstrap/4.1.0/js/bootstrap.min.js"></script>
+        <script src="https://cdn.staticfile.org/vue-resource/1.5.1/vue-resource.min.js"></script>
+        <script>
+            window.count = 0;
+        </script>
+</head>
+<body>
+<div class='container-fluid'>
+    <div class='row page-title'>
+        <div class='col pt-left'>
+            <p class='pt-left'>项目开发管理系统</p>
+        </div>
+        <div class='col'>
+            <p id='user' class='pt-right'>{{username}}&nbsp;&nbsp;<a href='#'>退出</a></p>
+        </div>
+    </div>
+</div>
+<div id='wrapper' class='container-fluid' style='background: linear-gradient(#9999FF 0%,#009DD9 100%);'>
+    <br/>
+    <div class='row' style='color: white;font-size: 2rem;'>
+        <div class='col'></div>
+        <div class='col'><a href='./teamManagement.html' style='color: white;text-decoration: none;'>团队</a></div>
+        <div class='col'><a href='./teamSelection.html' style='color: #00FFCC;text-decoration: none;'>项目</a></div>
+        <div class='col'>账户</div>
+        <div class='col'></div>
+        <div class='col'></div>
+    </div>
+    <div class='row'>
+        <div id='vueProjectList' class='container box'>
+            <div class='row'>
+                <div v-for='(item,index) in projectList'>
+                    <div class='col'>
+                        <div v-bind:id='getId(item.projectId)' class='square' onclick='jumpTo(this)'>
+                            <div style='position:relative;top:20%;'><img src='./image/projectManagement/project.png' alt='project' /></div>
+                            <div style='position:relative;top:30%;'>{{item.name}}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br/>
+    </div>
+</div>
+</body>
+<script>
+    var vm = new Vue ({
+        el: '#user',
+        data: {
+            username: 'dadagum'
+        }
+    })
+
+    $(document).ready(function() {
+        $('#wrapper').css('height',screen.availHeight.toString());
+        getProjectList(123,123);
+    })
+
+    function getProjectList(srcUserId,groupId) {
+        var tl = new Vue ({
+            el: '#vueProjectList',
+            data: {
+                projectList: []
+            },
+            methods:{
+                post:function(){
+                    this.$http.post('http://110.64.91.103/test/getProjectList.php',{userId: srcUserId,groupId: groupId},{emulateJSON: true}).then(function(res){
+                        this.projectList = res.body.projectList;
+                    },function(res){
+                        console.log(res.status);
+                    })
+                },
+                getId:function(index){
+                    return 'project'+index.toString();
+                }
+            }
+        })
+        tl.post();
+    }
+
+    function jumpTo(res){
+        id = res.id.substr(7);
+        window.location.href = 'projectDetail.html?projectId=' + id;
+    }
+</script>
+</html>
