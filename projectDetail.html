@@ -195,7 +195,7 @@
             },
             methods:{
                 post:function(){
-                    this.$http.post('http://110.64.91.103/test/getProject.php',{projectId: projectId},{emulateJSON: true}).then(function(res){
+                    this.$http.post('./test/getProject.php',{projectId: projectId},{emulateJSON: true}).then(function(res){
                         this.project = res.body.project;
                     },function(res){
                         console.log(res.status);
@@ -211,7 +211,7 @@
 
     function submitDiss(){
         text=$('#dissContent').val();
-        $.post('http://110.64.91.103/test/addDiss.php',{cotent: text},function(res){
+        $.post('./test/addDiss.php',{cotent: text},function(res){
             alert(res);
         });
     }

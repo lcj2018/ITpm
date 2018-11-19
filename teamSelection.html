@@ -82,7 +82,7 @@
             },
             methods:{
                 post:function(){
-                    this.$http.post('http://110.64.91.103/test/getTeamList.php',{userId: srcUserId},{emulateJSON: true}).then(function(res){
+                    this.$http.post('./test/getTeamList.php',{userId: srcUserId},{emulateJSON: true}).then(function(res){
                         this.teamList = res.body.teamList;
                     },function(res){
                         console.log(res.status);

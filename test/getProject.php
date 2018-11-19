@@ -1,0 +1,24 @@
+{
+	"project":{
+		"tasks":[
+		{
+			"name":"原型设计"
+		}],
+		"members":[
+		{
+			"name":"nike"
+		},{
+			"name":"Dva"
+		},{
+			"name":"Mercy"
+		},{
+			"name":"xiaoxiaoguma"
+		}],
+		"comments":"dadagumnb",
+		"progress":{
+			"total":"250",
+			"out":"249",
+			"completed":"1"
+		}
+	}
+}

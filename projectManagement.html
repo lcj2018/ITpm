@@ -77,7 +77,7 @@
             },
             methods:{
                 post:function(){
-                    this.$http.post('http://110.64.91.103/test/getProjectList.php',{userId: srcUserId,groupId: groupId},{emulateJSON: true}).then(function(res){
+                    this.$http.post('./test/getProjectList.php',{userId: srcUserId,groupId: groupId},{emulateJSON: true}).then(function(res){
                         this.projectList = res.body.projectList;
                     },function(res){
                         console.log(res.status);
