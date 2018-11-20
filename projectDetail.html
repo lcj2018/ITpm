@@ -68,7 +68,7 @@
                     </div>
                 </div>
                 <div class='square' style='border-style: dashed;'>
-                    <div style='position:relative;top:35%;'><img src='./image/projectDetail/add.png' alt='add' /></div>
+                    <div style='position:relative;top:35%;'><img data-toggle="modal" data-target="#addMemModal" src='./image/projectDetail/add.png' alt='add' /></div>
                 </div>
             </div>
             <!-- 讨论 -->
@@ -174,6 +174,54 @@
         </div>
     </div>
 </div>
+<div class="modal fade" id="addMemModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+    
+        <!-- 模态框头部 -->
+        <div class="modal-header">
+            <h4 class="modal-title">添加成员</h4>
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+    
+        <!-- 模态框主体 -->
+        <div class="modal-body">
+            <div class="form-group">
+                <label for="member">选择成员:</label>
+                <div style="padding: 0px 5rem 0px;">
+                    <div class="row">
+                        <div class="col">
+                            <div class="input-group">
+                                <input type="text" class="form-control">
+                                <div class="input-group-btn">
+                                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                                        下拉菜单 
+                                        <span class="caret"></span>
+                                    </button>
+                                    <ul class="dropdown-menu pull-right">
+                                        <li><a href="#">功能</a></li>
+                                        <li><a href="#">另一个功能</a></li>
+                                        <li><a href="#">其他</a></li>
+                                        <li class="divider"></li>
+                                        <li><a href="#">分离的链接</a></li>
+                                    </ul>
+                                </div><!-- /btn-group -->
+                            </div><!-- /input-group -->
+                        </div><!-- /.col-lg-6 -->
+                    </div><!-- /.row -->
+                </div>
+            </div>
+        </div>
+    
+        <!-- 模态框底部 -->
+        <div class="modal-footer">
+            <button type="button" class="btn btn-success" onclick='submitMem()'>提交</button>
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
+        </div>
+    
+        </div>
+    </div>
+</div>
 <script>
     var usr = new Vue({
         el: '#user',
@@ -197,6 +245,7 @@
                 post:function(){
                     this.$http.post('./test/getProject.php',{projectId: projectId},{emulateJSON: true}).then(function(res){
                         this.project = res.body.project;
+                        alertMem(this.project.members);
                     },function(res){
                         console.log(res.status);
                     })
@@ -209,6 +258,10 @@
         p.post();
     }
 
+    function alertMem(t){
+        len = t.length;
+    }
+
     function submitDiss(){
         text=$('#dissContent').val();
         $.post('./test/addDiss.php',{cotent: text},function(res){
@@ -219,6 +272,10 @@
     function addNewTask(){
         startDate=$('#startDate').val();
         alert(startDate);
+    }
+
+    function submitMem(){
+
     }
 </script>
 </html>
