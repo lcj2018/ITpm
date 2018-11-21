@@ -62,7 +62,7 @@
             </div>
             <div class='row'>
                 <div v-for='item in project.members'>
-                    <div class='square' data-toggle="modal" data-target="#delMemModal" onclick="alertDelMemModal('item')" src='./image/projectDetail/add.png'>
+                    <div v-bind:id='item.name' class='square' data-toggle="modal" data-target="#delMemModal" onclick="alertDelMemModal(this)" src='./image/projectDetail/add.png'>
                         <div style='position:relative;top:20%;'><img src='./image/projectDetail/member.png' alt='member' /></div>
                         <div style='position:relative;top:30%;'>{{item.name}}</div>
                     </div>
@@ -237,7 +237,7 @@
                 <div class='row' style='text-align: center;'>
                     <div class='col'>
                         <label for='username'><strong>用户名：</strong></label>
-                        <div id='username'></div>
+                        <section id='username'></section>
                     </div>
                 </div>
             </div>
@@ -319,7 +319,12 @@
 
     function alertDelMemModal(item)
     {
-        alert(item);
+        $('#username').text(item.id);
+    }
+
+    function name2id(value)
+    {
+        return value;
     }
 </script>
 </html>

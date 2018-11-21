@@ -14,9 +14,6 @@
         <script src="https://cdn.staticfile.org/popper.js/1.12.5/umd/popper.min.js"></script>
         <script src="https://cdn.staticfile.org/twitter-bootstrap/4.1.0/js/bootstrap.min.js"></script>
         <script src="https://cdn.staticfile.org/vue-resource/1.5.1/vue-resource.min.js"></script>
-        <script>
-            window.count = 0;
-        </script>
 </head>
 <body>
 <div class='container-fluid'>
@@ -59,7 +56,7 @@
                                     }
                                 </script> -->
                                 <!-- v-bind在data-target中失效 暂时无法处理 -->
-                                <div class='col' data-toggle='collapse' data-target="#showMem1" style='font-size: 1.5rem;'><p>{{item.name}}<font style='color: #CCCCCC'>(共{{item.memberCnt}}人)</font></p></div>
+                                <div class='col' data-toggle='collapse' data-target="#showMem1" style='font-size: 1.5rem;'><p>{{item.name}}<font style='color: #CCCCCC;'>(共{{item.memberCnt}}人)</font></p></div>
                                 <div class='col' data-toggle='collapse' data-target='#showMem1'></div>
                                 <div class='col' style='float: right;text-align: right;' v-if='item.leader=="true"'>
                                     <img id='addMem' data-toggle="modal" data-target="#addMemModal" src='./image/teamManagement/add.png' alt='addMem' />&nbsp;
