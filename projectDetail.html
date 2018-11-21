@@ -62,7 +62,7 @@
             </div>
             <div class='row'>
                 <div v-for='item in project.members'>
-                    <div class='square'>
+                    <div class='square' data-toggle="modal" data-target="#delMemModal" onclick="alertDelMemModal('item')" src='./image/projectDetail/add.png'>
                         <div style='position:relative;top:20%;'><img src='./image/projectDetail/member.png' alt='member' /></div>
                         <div style='position:relative;top:30%;'>{{item.name}}</div>
                     </div>
@@ -192,19 +192,13 @@
                     <div class="row">
                         <div class="col">
                             <div class="input-group">
-                                <input type="text" class="form-control">
+                                <input id='userSelector' type="text" class="form-control">
                                 <div class="input-group-btn">
                                     <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
                                         下拉菜单 
                                         <span class="caret"></span>
                                     </button>
-                                    <ul class="dropdown-menu pull-right">
-                                        <li><a href="#">功能</a></li>
-                                        <li><a href="#">另一个功能</a></li>
-                                        <li><a href="#">其他</a></li>
-                                        <li class="divider"></li>
-                                        <li><a href="#">分离的链接</a></li>
-                                    </ul>
+                                    <ul id='memList' class="dropdown-menu pull-right"></ul>
                                 </div><!-- /btn-group -->
                             </div><!-- /input-group -->
                         </div><!-- /.col-lg-6 -->
@@ -216,6 +210,42 @@
         <!-- 模态框底部 -->
         <div class="modal-footer">
             <button type="button" class="btn btn-success" onclick='submitMem()'>提交</button>
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
+        </div>
+    
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="delMemModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+    
+        <!-- 模态框头部 -->
+        <div class="modal-header">
+            <h4 class="modal-title">成员信息</h4>
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+    
+        <!-- 模态框主体 -->
+        <div class="modal-body">
+            <div class="form-group">
+                <div class='row' style='text-align: center;'>
+                    <div class='col'>
+                        <img src='./image/projectDetail/memberIcon.png' alt='头像' />
+                    </div>
+                </div>
+                <div class='row' style='text-align: center;'>
+                    <div class='col'>
+                        <label for='username'><strong>用户名：</strong></label>
+                        <div id='username'></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    
+        <!-- 模态框底部 -->
+        <div class="modal-footer">
+            <button type="button" class="btn btn-danger" onclick=''>移除</button>
             <button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
         </div>
     
@@ -260,6 +290,10 @@
 
     function alertMem(t){
         len = t.length;
+        for(i=0;i<len;++i)
+        {
+            $('#memList').append("<li onclick=\"setUserSelector('"+t[i].name.toString()+"')\">"+t[i].name.toString()+'</li>');
+        }
     }
 
     function submitDiss(){
@@ -273,9 +307,19 @@
         startDate=$('#startDate').val();
         alert(startDate);
     }
+    
+    function setUserSelector(str)
+    {
+        $('#userSelector').val(str);
+    }
 
     function submitMem(){
 
+    }
+
+    function alertDelMemModal(item)
+    {
+        alert(item);
     }
 </script>
 </html>
