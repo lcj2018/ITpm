@@ -45,19 +45,8 @@
                         <div class='container'>
                             <div class='row'>
                                 <br/><br/>
-                                <!-- <script>
-                                    document.write(window.count);
-                                    window.count=2;
-                                    document.write("<button class='col' data-toggle='collapse' data-target='#"+getId("{{index}}")+"' style='font-size: 1.5rem;'><p>{{item.name}}<font style='color: #CCCCCC'>(共{{item.memberCnt}}人)</font></p></button>");
-                                    document.write("<button class='col' data-toggle='collapse' data-target='#"+getId("{{index}}")+"'></button>");
-
-                                    function getId(index){
-                                        return "showMem"+index.toString();
-                                    }
-                                </script> -->
-                                <!-- v-bind在data-target中失效 暂时无法处理 -->
-                                <div class='col' data-toggle='collapse' data-target="#showMem1" style='font-size: 1.5rem;'><p>{{item.name}}<font style='color: #CCCCCC;'>(共{{item.memberCnt}}人)</font></p></div>
-                                <div class='col' data-toggle='collapse' data-target='#showMem1'></div>
+                                <div class='col' data-toggle='collapse' v-bind:data-target="getId('#showMem',index)" style='font-size: 1.5rem;'><p>{{item.name}}<font style='color: #CCCCCC;'>(共{{item.memberCnt}}人)</font></p></div>
+                                <div class='col' data-toggle='collapse' data-target="getId('#showMem',index)"></div>
                                 <div class='col' style='float: right;text-align: right;' v-if='item.leader=="true"'>
                                     <img id='addMem' data-toggle="modal" data-target="#addMemModal" src='./image/teamManagement/add.png' alt='addMem' />&nbsp;
                                     <img id='delTeam' data-toggle="modal" data-target="#delTeamModal" src='./image/teamManagement/del.png' alt='delTeam' />
@@ -104,8 +93,8 @@
                                 </div>
                             </div>
                             <div class='row'>
-                                <div v-bind:id='getId(index)' class='collapse'>
-                                        {{item.name}}
+                                <div v-bind:id="getId('showMem',index)" class='collapse'>
+                                    {{item.name}}
                                 </div>
                             </div>
                         </div>
@@ -144,8 +133,8 @@
                         console.log(res.status);
                     })
                 },
-                getId:function(index){
-                    return "showMem"+index.toString();
+                getId:function(str,index){
+                    return str+index.toString();
                 }
             }
         })
