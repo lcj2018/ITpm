@@ -47,25 +47,26 @@
                                 <br/><br/>
                                 <div class='col' data-toggle='collapse' v-bind:data-target="getId('#showMem',index)" style='font-size: 1.5rem;'><p>{{item.name}}<font style='color: #CCCCCC;'>(共{{item.memberCnt}}人)</font></p></div>
                                 <div class='col' data-toggle='collapse' data-target="getId('#showMem',index)"></div>
-                                <div class='col' style='float: right;text-align: right;' v-if='item.leader=="true"'>
-                                    <img id='addMem' data-toggle="modal" data-target="#addMemModal" src='./image/teamManagement/add.png' alt='addMem' />&nbsp;
+                                <div class='col' style='float: right;text-align: right;'>
+                                    <img id='addMem' v-if='item.leader=="true"' data-toggle="modal" data-target="#addMemModal" src='./image/teamManagement/add.png' alt='addMem' />&nbsp;
                                     <img id='delTeam' data-toggle="modal" data-target="#delTeamModal" src='./image/teamManagement/del.png' alt='delTeam' />
                                     <div class="modal fade" id="delTeamModal">
                                         <div class="modal-dialog">
                                             <div class="modal-content">
                                         
-                                            <div class="modal-header">
-                                                <h4 class="modal-title">退出队伍</h4>
-                                                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                                            </div>
-                                        
-                                            <div class="modal-body">
-                                                模态框内容..
-                                            </div>
-                                        
-                                            <div class="modal-footer">
-                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
-                                            </div>
+                                                <div class="modal-header">
+                                                    <h4 class="modal-title">退出队伍</h4>
+                                                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                                </div>
+                                            
+                                                <div class="modal-body" style='text-align: center;'>
+                                                    是否确定退出队伍？
+                                                </div>
+                                            
+                                                <div class="modal-footer">
+                                                    <button type="button" class='btn btn-danger' @click="delTeam(item)">确定</button>
+                                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
+                                                </div>
                                         
                                             </div>
                                         </div>
@@ -74,18 +75,18 @@
                                         <div class="modal-dialog">
                                             <div class="modal-content">
                                         
-                                            <div class="modal-header">
-                                                <h4 class="modal-title">增加成员</h4>
-                                                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                                            </div>
-                                        
-                                            <div class="modal-body">
-                                                模态框内容..
-                                            </div>
-                                        
-                                            <div class="modal-footer">
-                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
-                                            </div>
+                                                <div class="modal-header">
+                                                    <h4 class="modal-title">增加成员</h4>
+                                                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                                </div>
+                                            
+                                                <div class="modal-body">
+                                                    模态框内容..
+                                                </div>
+                                            
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
+                                                </div>
                                         
                                             </div>
                                         </div>
@@ -93,8 +94,29 @@
                                 </div>
                             </div>
                             <div class='row'>
-                                <div v-bind:id="getId('showMem',index)" class='collapse'>
-                                    {{item.name}}
+                                <div v-bind:id="getId('showMem',index)" class='collapse container' style='font-size:1.5rem;'>
+                                    <div v-for="member in item.mems">
+                                        <div class='row'>
+                                            <div class='col'>
+                                                <div class='teambox'>
+                                                    <div class='container'>
+                                                        <div class='row'>
+                                                            <div class='col'>
+                                                                <div style='height:2rem;width:2rem;border-radius:100%;background-color:#f05654;float:left;'></div>
+                                                                {{member.name}}
+                                                            </div>
+                                                            <div class='col'>{{member.mail}}</div>
+                                                            <div class='col' style='text-align: right;'>
+                                                                <img id='addMem' src='./image/teamManagement/add.png' alt='addMem' style='height:2rem;width:2rem;'/>&nbsp;
+                                                                <img id='delTeam' src='./image/teamManagement/del.png' alt='delTeam' style='height:2rem;width:2rem;'/>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <br/>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -135,6 +157,13 @@
                 },
                 getId:function(str,index){
                     return str+index.toString();
+                },
+                delTeam:function(team){
+                    this.$http.post('./test/delTeam.php',{userId: srcUserId},{enlateJSON: true}).then(function(res){
+                        alert('Success!');
+                    },function(res){
+                        alert('Err:' + res.status);
+                    })
                 }
             }
         })
@@ -145,8 +174,8 @@
 
     }
 
-    function delTeam(){
-
+    function delTeam(team){
+        alert('123');
     }
 
     function addNewMem(){
