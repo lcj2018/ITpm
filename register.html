@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+        <meta charset="utf-8">
+        <title>注册</title>
+        <meta http-equiv="content-type" content="text/html" charset="utf-8" />
+        <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+        <link type="text/css" rel="stylesheet" href="./css/style.css" />
+        <link type="text/css" rel="stylesheet" href="./css/login.css" />
+        <script type="text/javascript" src="https://cdn.staticfile.org/vue/2.2.2/vue.min.js"></script>
+        <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.1.0/css/bootstrap.min.css">
+        <script src="https://cdn.staticfile.org/jquery/3.2.1/jquery.min.js"></script>
+        <script src="https://cdn.staticfile.org/popper.js/1.12.5/umd/popper.min.js"></script>
+        <script src="https://cdn.staticfile.org/twitter-bootstrap/4.1.0/js/bootstrap.min.js"></script>
+        <script src="https://cdn.staticfile.org/vue-resource/1.5.1/vue-resource.min.js"></script>
+        <script src="https://unpkg.com/vuejs-datepicker"></script>
+</head>
+<body>
+<div id='wrapper' class='container-fluid' style='background: linear-gradient(#9999FF 0%,#009DD9 100%);'>
+        <div style='position:relative;top:10%;'>
+                <div class='row'>
+                        <div class='col'></div>
+                        <div class='col'>
+                                <img src='.\image\login\oct.png' alt='dadagum' style='float:left;'/>
+                                <h1 style='color: white;'>项目开发管理系统</h1>
+                        </div>
+                        <div class='col'></div>
+                </div><br/>
+                <div class='row'>
+                        <div class='col'></div>
+                        <div class='col'>
+                                <div class='container-fluid box' style='border-radius:0;box-shadow: 10px 10px 5px #888888;text-align:center;'>
+                                        <br/>
+                                        <h2><strong>注册</strong></h2>
+                                        <br/>
+                                        <div class='row'>
+                                                <div class='col' style='text-align: left;'>
+                                                        <label for='username' style='font-size:1.2rem;'>用户名：</label>
+                                                        <input type='text' id='username' />
+                                                </div>
+                                        </div>
+                                        <br/>
+                                        <div class='row'>
+                                                <div class='col' style='text-align: left;'>
+                                                        <label for='password' style='font-size:1.2rem;'>密码：</label>&nbsp;&nbsp;&nbsp;&nbsp;
+                                                        <input type='text' id='password' />
+                                                </div>
+                                        </div>
+                                        <br/>
+                                        <div class='row'>
+                                                <div class='col'>
+                                                        <div id='warning'></div>
+                                                </div>
+                                        </div>
+                                        <br/>
+                                        <div class='row'>
+                                                <div class='col'></div>
+                                                <div class='col'>
+                                                        <button type='button' onclick='control()'>确认</button>
+                                                </div>
+                                                <div class='col'></div>
+                                        </div>
+                                        <br/>
+                                </div>
+                        </div>
+                        <div class='col'></div>
+                </div>
+        </div>
+</div>  
+<script>
+        $(document).ready(function(){
+                $('#wrapper').css('height',screen.availHeight.toString());
+        })
+
+        function control()
+        {
+                username=$('#username').val();
+                password=$('#password').val();
+                if(username.length==0)
+                {
+                        alert('用户名为空！');
+                        return;
+                }
+                if(password.length==0)
+                {
+                        alert('密码为空！');
+                        return;
+                }
+                $.post('./test/register.php',{username: username,password: password},function(res){
+                        if(res.status=='ok')
+                        {
+                                window.location.href='./login.html';
+                        }
+                        else {
+                                $('#warning').append("<div class='alert alert-danger'><a href='#' class='close' data-dismiss='alert'>&times;</a>" + res.message + "</div>");
+                        }
+                },"json")
+        }
+</script>
+</body>
+</html>
