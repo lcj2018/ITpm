@@ -1,7 +1,8 @@
 {"teamList":[
 {"name":"team1",
 "groupId":"1",
-"leader":"false",
+"leaderFlag":"false",
+"leader":"aaa",
 "memberCnt":"3",
 "mems":[
 {"name":"aaa","mail":"aaa@aaa"},
@@ -10,7 +11,8 @@
 },
 {"name":"team2",
 "groupId":"2",
-"leader":"true",
+"leaderFlag":"true",
+"leader":"bbb",
 "memberCnt":"3",
 "mems":[
 {"name":"aaa","mail":"aaa@aaa"},

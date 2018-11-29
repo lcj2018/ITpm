@@ -48,7 +48,7 @@
                                 <div class='col' data-toggle='collapse' v-bind:data-target="getId('#showMem',index)" style='font-size: 1.5rem;'><p>{{item.name}}<font style='color: #CCCCCC;'>(共{{item.memberCnt}}人)</font></p></div>
                                 <div class='col' data-toggle='collapse' data-target="getId('#showMem',index)"></div>
                                 <div class='col' style='float: right;text-align: right;'>
-                                    <img id='addMem' v-if='item.leader=="true"' data-toggle="modal" data-target="#addMemModal" src='./image/teamManagement/add.png' alt='addMem' />&nbsp;
+                                    <img id='addMem' v-if='item.leaderFlag=="true"' data-toggle="modal" data-target="#addMemModal" src='./image/teamManagement/add.png' alt='addMem' />&nbsp;
                                     <img id='delTeam' data-toggle="modal" data-target="#delTeamModal" src='./image/teamManagement/del.png' alt='delTeam' />
                                     <div class="modal fade" id="delTeamModal">
                                         <div class="modal-dialog">
@@ -102,13 +102,13 @@
                                                     <div class='container'>
                                                         <div class='row'>
                                                             <div class='col'>
-                                                                <div style='height:2rem;width:2rem;border-radius:100%;background-color:#f05654;float:left;'></div>
+                                                                <div v-if='item.leader==member.name' style='height:2rem;width:2rem;border-radius:100%;background-color:#f05654;float:left;'></div>
+                                                                <div v-else style='height:2rem;width:2rem;border-radius:100%;background-color:#ffc64b;float:left;'></div>
                                                                 {{member.name}}
                                                             </div>
                                                             <div class='col'>{{member.mail}}</div>
                                                             <div class='col' style='text-align: right;'>
-                                                                <img id='addMem' src='./image/teamManagement/add.png' alt='addMem' style='height:2rem;width:2rem;'/>&nbsp;
-                                                                <img id='delTeam' src='./image/teamManagement/del.png' alt='delTeam' style='height:2rem;width:2rem;'/>
+                                                                <img v-if='item.leaderFlag=="true"' id='delTeam' src='./image/teamManagement/del.png' alt='delTeam' style='height:2rem;width:2rem;'/>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -175,7 +175,7 @@
     }
 
     function delTeam(team){
-        alert('123');
+        alert(team);
     }
 
     function addNewMem(){
