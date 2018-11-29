@@ -5,9 +5,9 @@
 "leader":"aaa",
 "memberCnt":"3",
 "mems":[
-{"name":"aaa","mail":"aaa@aaa"},
-{"name":"bbb","mail":"bbb@bbb"},
-{"name":"ccc","mail":"ccc@ccc"}]
+{"name":"aaa","mail":"aaa@aaa","userId":"1"},
+{"name":"bbb","mail":"bbb@bbb","userId":"2"},
+{"name":"ccc","mail":"ccc@ccc","userId":"3"}]
 },
 {"name":"team2",
 "groupId":"2",
@@ -15,8 +15,8 @@
 "leader":"bbb",
 "memberCnt":"3",
 "mems":[
-{"name":"aaa","mail":"aaa@aaa"},
-{"name":"bbb","mail":"bbb@bbb"},
-{"name":"ccc","mail":"ccc@ccc"}]
+{"name":"aaa","mail":"aaa@aaa","userId":"4"},
+{"name":"bbb","mail":"bbb@bbb","userId":"5"},
+{"name":"ccc","mail":"ccc@ccc","userId":"6"}]
 }
 ]}

@@ -108,7 +108,28 @@
                                                             </div>
                                                             <div class='col'>{{member.mail}}</div>
                                                             <div class='col' style='text-align: right;'>
-                                                                <img v-if='item.leaderFlag=="true"' id='delTeam' src='./image/teamManagement/del.png' alt='delTeam' style='height:2rem;width:2rem;'/>
+                                                                <img v-if='item.leaderFlag=="true"' id='delMem' data-toggle="modal" data-target="#delMemModal" src='./image/teamManagement/del.png' alt='delMem' style='height:2rem;width:2rem;'/>
+                                                            </div>
+                                                            <div class="modal fade" id="delMemModal">
+                                                                <div class="modal-dialog">
+                                                                    <div class="modal-content">
+                                                                
+                                                                        <div class="modal-header">
+                                                                            <h4 class="modal-title">移除成员</h4>
+                                                                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                                                        </div>
+                                                                    
+                                                                        <div class="modal-body" style='text-align: center;'>
+                                                                            是否移除该成员？
+                                                                        </div>
+                                                                    
+                                                                        <div class="modal-footer">
+                                                                            <button type="button" class='btn btn-danger' @click="delMem(item,member)">确定</button>
+                                                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
+                                                                        </div>
+                                                                
+                                                                    </div>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -159,7 +180,14 @@
                     return str+index.toString();
                 },
                 delTeam:function(team){
-                    this.$http.post('./test/delTeam.php',{userId: srcUserId},{enlateJSON: true}).then(function(res){
+                    this.$http.post('./test/delTeam.php',{userId: srcUserId,groupId: team.groupId},{enlateJSON: true}).then(function(res){
+                        alert('Success!');
+                    },function(res){
+                        alert('Err:' + res.status);
+                    })
+                },
+                delMem:function(team,member){
+                    this.$http.post('./test/delMem.php',{userId: srcUserId,groupId: team.groupId,destUserId: member.userId},{enlateJSON: true}).then(function(res){
                         alert('Success!');
                     },function(res){
                         alert('Err:' + res.status);
@@ -174,15 +202,7 @@
 
     }
 
-    function delTeam(team){
-        alert(team);
-    }
-
     function addNewMem(){
-
-    }
-
-    function delMem(){
 
     }
 </script>
