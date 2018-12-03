@@ -14,6 +14,7 @@
         <script src="https://cdn.staticfile.org/popper.js/1.12.5/umd/popper.min.js"></script>
         <script src="https://cdn.staticfile.org/twitter-bootstrap/4.1.0/js/bootstrap.min.js"></script>
         <script src="https://cdn.staticfile.org/vue-resource/1.5.1/vue-resource.min.js"></script>
+        <script src="https://unpkg.com/vuejs-datepicker"></script>
         <script>
             window.count = 0;
         </script>
@@ -41,6 +42,7 @@
     </div>
     <div class='row'>
         <div id='vueProjectList' class='container box'>
+            <img src='./image/projectManagement/add.png' style='float:right;' data-toggle="modal" data-target="#addProjectModal" alt='add'/>
             <div class='row'>
                 <div v-for='(item,index) in projectList'>
                     <div class='col'>
@@ -48,6 +50,41 @@
                             <div style='position:relative;top:20%;'><img src='./image/projectManagement/project.png' alt='project' /></div>
                             <div style='position:relative;top:30%;'>{{item.name}}</div>
                         </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal fade" id="addProjectModal">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                
+                        <!-- 模态框头部 -->
+                        <div class="modal-header">
+                            <h4 class="modal-title">创建项目</h4>
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        </div>
+                    
+                        <!-- 模态框主体 -->
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label for="taskName">项目名:</label>
+                                <input id='taskName' type="text" class="form-control" style='width:50%;display:inline;' placeholder="taskName" /><br/>
+                                <label for='startDate'>开始日期：</label>
+                                <vuejs-datepicker id='startDate' placeholder='choose start date'></vuejs-datepicker>
+                                <label for='endDate'>结束日期：</label>
+                                <vuejs-datepicker id='endDate' placeholder='choose end date'></vuejs-datepicker><br/>
+                                <label for="respseName">项目负责人:</label>
+                                <input id='respName' type="text" class="form-control" style='width:50%;display:inline;' placeholder="respName" /><br/>
+                                <label for='taskDescription'>项目详情：</label><br/>
+                                <textarea id='taskDescription' rows='5' cols='45'></textarea>
+                            </div>
+                        </div>
+                    
+                        <!-- 模态框底部 -->
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-success" onclick='addNewProject()'>提交</button>
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
+                        </div>
+                        
                     </div>
                 </div>
             </div>
@@ -86,6 +123,9 @@
                 getId:function(index){
                     return 'project'+index.toString();
                 }
+            },
+            components: {
+                vuejsDatepicker
             }
         })
         tl.post();
@@ -94,6 +134,10 @@
     function jumpTo(res){
         id = res.id.substr(7);
         window.location.href = 'projectDetail.html?projectId=' + id;
+    }
+
+    function addNewProject(){
+        
     }
 </script>
 </html>

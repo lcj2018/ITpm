@@ -46,7 +46,7 @@
             </div>
             <div class='row'>
                 <div v-for='item in project.tasks'>
-                    <div class='square'>
+                    <div v-bind:id='getId(item.taskId)' class='square' onclick='jumpTo(this)'>
                         <div style='position:relative;top:20%;'><img src='./image/projectDetail/task.png' alt='task' /></div>
                         <div style='position:relative;top:40%;'>{{item.name}}</div>
                     </div>
@@ -209,7 +209,7 @@
     
         <!-- 模态框底部 -->
         <div class="modal-footer">
-            <button type="button" class="btn btn-success" onclick='submitMem()'>提交</button>
+            <button type="button" class="btn btn-success" onclick='addMem()'>提交</button>
             <button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
         </div>
     
@@ -245,7 +245,7 @@
     
         <!-- 模态框底部 -->
         <div class="modal-footer">
-            <button type="button" class="btn btn-danger" onclick=''>移除</button>
+            <button type="button" class="btn btn-danger" onclick='delMem()'>移除</button>
             <button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
         </div>
     
@@ -279,6 +279,9 @@
                     },function(res){
                         console.log(res.status);
                     })
+                },
+                getId:function(index){
+                    return 'task'+index.toString();
                 }
             },
             components: {
@@ -305,7 +308,6 @@
 
     function addNewTask(){
         startDate=$('#startDate').val();
-        alert(startDate);
     }
     
     function setUserSelector(str)
@@ -313,7 +315,12 @@
         $('#userSelector').val(str);
     }
 
-    function submitMem(){
+    function delMem()
+    {
+
+    }
+
+    function addMem(){
 
     }
 
@@ -325,6 +332,11 @@
     function name2id(value)
     {
         return value;
+    }
+
+    function jumpTo(res){
+        id = res.id.substr(4);
+        window.location.href = 'missionManagement.html?groupId=' + id;
     }
 </script>
 </html>
