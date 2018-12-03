@@ -90,7 +90,7 @@
 		
 			<!-- 模态框底部 -->
 			<div class="modal-footer">
-				<button type="button" class="btn btn-success" onclick='submitSource()'>确认</button>
+				<button type="button" class="btn btn-success" onclick='addSource()'>确认</button>
 				<button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
 			</div>
 		
@@ -120,7 +120,7 @@
 		
 			<!-- 模态框底部 -->
 			<div class="modal-footer">
-				<button type="button" class="btn btn-success" onclick='submitSourceR()'>确认</button>
+				<button type="button" class="btn btn-success" onclick='alertSource()'>确认</button>
 				<button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
 			</div>
 		
@@ -164,13 +164,13 @@
         p.post();
     }
 	
-	function submitSource(){
+	function addSource(){
 		snam = $('#sourceName').val();
 		snum = $('#sourceNum').val();
 		alert(snam);
 	}
 	
-	function submitSourceR(){
+	function alertSource(){
 		snam = $('#sourceNameR').val();
 		snum = $('#sourceNumR').val();
 		alert(snam);

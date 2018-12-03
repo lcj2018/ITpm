@@ -46,7 +46,7 @@
             </div>
             <div class='row'>
                 <div v-for='item in project.tasks'>
-                    <div class='square'>
+                    <div v-bind:id='getId(item.taskId)' class='square' onclick='jumpTo(this)'>
                         <div style='position:relative;top:20%;'><img src='./image/projectDetail/task.png' alt='task' /></div>
                         <div style='position:relative;top:40%;'>{{item.name}}</div>
                     </div>
@@ -95,12 +95,12 @@
             <!-- 资源 -->
             <br/>
             <div class='row' style='font-size: 1.5rem;'>
-                <div class='col'><strong>资源</strong>&nbsp;&nbsp;<a href='#' alt='查看详情'>查看详情</a></div>
+                <div class='col'><strong>资源</strong>&nbsp;&nbsp;<a href='./resourceManagement.html' alt='查看详情'>查看详情</a></div>
             </div>
             <!-- 进度管理 -->
             <br/>
             <div class='row' style='font-size: 1.5rem;'>
-                <div class='col'><strong>进度管理</strong>&nbsp;&nbsp;<a href='#' alt='查看详情'>查看详情</a></div>
+                <div class='col'><strong>进度管理</strong>&nbsp;&nbsp;<a href='./processManagement.html' alt='查看详情'>查看详情</a></div>
             </div>
             <div class='row' style='font-size: 1.5rem;'>
                 <div class='col'>共计有{{project.progress.total}}项任务，其中过期{{project.progress.out}}项，已完成{{project.progress.completed}}项。</div>
@@ -209,7 +209,7 @@
     
         <!-- 模态框底部 -->
         <div class="modal-footer">
-            <button type="button" class="btn btn-success" onclick='submitMem()'>提交</button>
+            <button type="button" class="btn btn-success" onclick='addMem()'>提交</button>
             <button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
         </div>
     
@@ -245,7 +245,7 @@
     
         <!-- 模态框底部 -->
         <div class="modal-footer">
-            <button type="button" class="btn btn-danger" onclick=''>移除</button>
+            <button type="button" class="btn btn-danger" onclick='delMem()'>移除</button>
             <button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
         </div>
     
@@ -279,6 +279,9 @@
                     },function(res){
                         console.log(res.status);
                     })
+                },
+                getId:function(index){
+                    return 'task'+index.toString();
                 }
             },
             components: {
@@ -300,12 +303,23 @@
         text=$('#dissContent').val();
         $.post('./test/addDiss.php',{cotent: text},function(res){
             alert(res);
-        });
+        },"json");
     }
 
     function addNewTask(){
+        name=$('taskName').val();
         startDate=$('#startDate').val();
-        alert(startDate);
+        endDate=$('#endDate').val();
+        respsename=$('#respseName').val();
+        description=$('#taskDescription').val();
+        $.post('./test/addNewTask.php',{taskName: name,startDate: startDate,endDate: endDate,respseName: respsename,taskDescription: description},function(res){
+            if(res.status=='ok')
+            {
+                alert('Success');
+            } else {
+                alert('Err: '+res.msg);
+            }
+        },"json")
     }
     
     function setUserSelector(str)
@@ -313,8 +327,21 @@
         $('#userSelector').val(str);
     }
 
-    function submitMem(){
+    function delMem()
+    {
 
+    }
+
+    function addMem(){
+        name=$('#userSelector');
+        $.post('./test/addMem.php',{username: name},function(res){
+            if(res.status=='ok')
+            {
+                alert('Success!');
+            } else {
+                alert('Err: '+res.msg);
+            }
+        },"json")
     }
 
     function alertDelMemModal(item)
@@ -325,6 +352,11 @@
     function name2id(value)
     {
         return value;
+    }
+
+    function jumpTo(res){
+        id = res.id.substr(4);
+        window.location.href = 'missionManagement.html?groupId=' + id;
     }
 </script>
 </html>

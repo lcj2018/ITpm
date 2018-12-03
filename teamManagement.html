@@ -258,7 +258,7 @@
     function addNewTeam(){
         name = $('#teamName').val();
         description = $('#teamDescription').val();
-        $.post('./test/addTeam.php',{userId: 123,name: name,description: description},function(res){
+        $.post('./test/addTeam.php',{userId: srcUserId,name: name,description: description},function(res){
             if(res.status =='ok')
             {
                 alert('Success!');
@@ -270,7 +270,7 @@
 
     function addNewMem(){
         name = $('#addedUsername').val();
-        $.post('./test/addMem.php',{name: name},function(res){
+        $.post('./test/addMem.php',{userId: srcUserId,name: name,groupId: groupId},function(res){
             if(res.status == 'ok')alert('Success');
             else alert(status.mess);
         },"json")
