@@ -303,11 +303,23 @@
         text=$('#dissContent').val();
         $.post('./test/addDiss.php',{cotent: text},function(res){
             alert(res);
-        });
+        },"json");
     }
 
     function addNewTask(){
+        name=$('taskName').val();
         startDate=$('#startDate').val();
+        endDate=$('#endDate').val();
+        respsename=$('#respseName').val();
+        description=$('#taskDescription').val();
+        $.post('./test/addNewTask.php',{taskName: name,startDate: startDate,endDate: endDate,respseName: respsename,taskDescription: description},function(res){
+            if(res.status=='ok')
+            {
+                alert('Success');
+            } else {
+                alert('Err: '+res.msg);
+            }
+        },"json")
     }
     
     function setUserSelector(str)

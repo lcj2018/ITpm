@@ -77,14 +77,14 @@
         {
                 username=$('#username').val();
                 password=$('#password').val();
-                if(username.length==0)
+                if(username.length<5||username.length>20)
                 {
-                        alert('用户名为空！');
+                        alert('用户名非法！应为5~20位。');
                         return;
                 }
                 if(password.length==0)
                 {
-                        alert('密码为空！');
+                        alert('密码非法！应为5~20位。');
                         return;
                 }
                 $.post('./test/register.php',{username: username,password: password},function(res){
