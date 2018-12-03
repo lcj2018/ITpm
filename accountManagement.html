@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+        <meta charset="utf-8">
+        <title>账户</title>
+        <meta http-equiv="content-type" content="text/html" charset="utf-8" />
+        <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+        <link type="text/css" rel="stylesheet" href="css/style.css" />
+        <link type="text/css" rel="stylesheet" href="css/accountManagement.css" />
+        <script type="text/javascript" src="https://cdn.staticfile.org/vue/2.2.2/vue.min.js"></script>
+        <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.1.0/css/bootstrap.min.css">
+        <script src="https://cdn.staticfile.org/jquery/3.2.1/jquery.min.js"></script>
+        <script src="https://cdn.staticfile.org/popper.js/1.12.5/umd/popper.min.js"></script>
+        <script src="https://cdn.staticfile.org/twitter-bootstrap/4.1.0/js/bootstrap.min.js"></script>
+        <script src="https://cdn.staticfile.org/vue-resource/1.5.1/vue-resource.min.js"></script>
+        <script src="https://unpkg.com/vuejs-datepicker"></script>
+</head>
+<body>
+<div class='container-fluid'>
+    <div class='row page-title'>
+        <div class='col pt-left'>
+            <p class='pt-left'>项目开发管理系统</p>
+        </div>
+        <div class='col'>
+            <p id='user' class='pt-right'>{{username}}&nbsp;&nbsp;<a href='#'>退出</a></p>
+        </div>
+    </div>
+</div>
+<div id='wrapper' class='container-fluid' style='background: linear-gradient(#9999FF 0%,#009DD9 100%);'>
+    <br/>
+    <div class='row' style='color: white;font-size: 2rem;'>
+        <div class='col'></div>
+        <div class='col'><a href='./teamManagement.html' style='color: white;text-decoration: none;'>团队</a></div>
+        <div class='col'><a href='./teamSelection.html' style='color: white;text-decoration: none;'>项目</a></div>
+        <div class='col'><a href='./userManagement.html' style='color: #00FFCC;text-decoration: none;'>账户</a></div>
+        <div class='col'></div>
+        <div class='col'></div>
+    </div>
+    <div class='row'>
+        <div id='vueAccount' class='container box'>
+            <!-- 成员 -->
+            <br/>
+            <div class='row'>
+                <div v-for='item in project.members'>
+                    <div v-bind:id='item.name' class='square' data-toggle="modal" data-target="#MemModal" onclick="alertMem(this)">
+                        <div style='position:relative;top:20%;'><img src='./image/userManagement/member.png' alt='member' /></div>
+                        <div style='position:relative;top:30%;'>{{item.name}}</div>
+                    </div>
+                </div>
+            </div>
+            <br/>
+        </div>
+    </div>
+	<div class="modal fade" id="MemModal">
+		<div class="modal-dialog">
+			<div class="modal-content">
+		
+			<!-- 模态框头部 -->
+			<div class="modal-header">
+				<h4 class="modal-title">用户信息</h4>
+				<button type="button" class="close" data-dismiss="modal">&times;</button>
+			</div>
+		
+			<!-- 模态框主体 -->
+			<div class="modal-body">
+				<div class="form-group">
+					<div class='row' style='text-align: center;'>
+						<div class='col'>
+							<img src='./image/projectDetail/memberIcon.png' alt='头像' />
+						</div>
+					</div>
+					<br/><br/>
+					<div class='row' style='text-align: center;'>
+						<div class = 'col'></div>
+						<div class = 'col'><strong>用户名：</strong></div>
+						<div class = 'col'><section id='username'></section></div>
+						<div class = 'col'></div>
+						<br/>
+					</div>
+				</div>
+			</div>
+		
+			<!-- 模态框底部 -->
+			<div class="modal-footer">
+				<div id = 'level'>
+					<div v-if = "lev == 'admin'">
+						<button type="button" class="btn btn-danger" onclick='checkuser("admin")'>删除用户</button>
+					</div>
+				</div>
+				<button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
+			</div>
+		
+			</div>
+		</div>
+	</div>
+    <br/><br/><br/>
+</div>
+</body>
+<script>
+    $(document).ready(function() {
+        $('#wrapper').css('height',screen.availHeight.toString());
+        getUser(123);
+    })
+	
+	var usr = new Vue({
+		el: '#user',
+		data: {
+			username: 'dadagum',
+		},
+	})
+	
+	var mm = new Vue({
+		el: '#level',
+		data: {
+			lev: 'admin',
+		},
+	})
+
+    function getUser(projectId) {
+        var p = new Vue ({
+            el: '#vueAccount',
+            data: {
+                project: '',
+            },
+            methods:{
+                post:function(){
+                    this.$http.post('http://110.64.91.103/itpm/test/getAccountList.php',{projectId: projectId},{emulateJSON: true}).then(function(res){
+                        this.project = res.body;
+                    },function(res){
+                        console.log(res.status);
+                    })
+                }
+            },
+            components: {
+                vuejsDatepicker
+            }
+        })
+        p.post();
+    }
+	
+	function alertMem(item){
+		$('#username').text(item.id);
+	}
+	
+	function alertLev(ites){
+		$('#level').text(ites);
+	}
+	
+	function checkuser(items){
+		if(items == 'admin')
+		{
+			alert('删除成功');
+		}
+		else
+		{
+			alert('你没有相应权限进行此操作');
+		}
+	}
+
+</script>
+</html>

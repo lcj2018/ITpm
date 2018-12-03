@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+        <meta charset="utf-8">
+        <title>资源管理</title>
+        <meta http-equiv="content-type" content="text/html" charset="utf-8" />
+        <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+        <link type="text/css" rel="stylesheet" href="./css/style.css" />
+        <link type="text/css" rel="stylesheet" href="./css/resourceManagement.css" />
+        <script type="text/javascript" src="https://cdn.staticfile.org/vue/2.2.2/vue.min.js"></script>
+        <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.1.0/css/bootstrap.min.css">
+        <script src="https://cdn.staticfile.org/jquery/3.2.1/jquery.min.js"></script>
+        <script src="https://cdn.staticfile.org/popper.js/1.12.5/umd/popper.min.js"></script>
+        <script src="https://cdn.staticfile.org/twitter-bootstrap/4.1.0/js/bootstrap.min.js"></script>
+        <script src="https://cdn.staticfile.org/vue-resource/1.5.1/vue-resource.min.js"></script>
+        <script src="https://unpkg.com/vuejs-datepicker"></script>
+</head>
+<body>
+<div class='container-fluid'>
+    <div class='row page-title'>
+        <div class='col pt-left'>
+            <p class='pt-left'>项目开发管理系统</p>
+        </div>
+        <div class='col'>
+            <p id='user' class='pt-right'>{{username}}&nbsp;&nbsp;<a href='#'>退出</a></p>
+        </div>
+    </div>
+</div>
+<div id='wrapper' class='container-fluid' style='background: linear-gradient(#9999FF 0%,#009DD9 100%);'>
+    <br/>
+    <div class='row' style='color: white;font-size: 2rem;'>
+        <div class='col'></div>
+        <div class='col'><a href='./teamManagement.html' style='color: white;text-decoration: none;'>团队</a></div>
+        <div class='col'><a href='./teamSelection.html' style='color: #00FFCC;text-decoration: none;'>项目</a></div>
+        <div class='col'><a href='./userManagement.html' style='color: white;text-decoration: none;'>账户</a></div>
+        <div class='col'></div>
+        <div class='col'></div>
+    </div>
+    <div class='row'>
+        <div id='vueResource' class='container box'>
+            <br/>
+            <div class='row'>
+                <div class = 'col'><h2>资源管理</h2></div>
+            </div>
+			<br/><br/>
+			<table class="table table-hover">
+				<caption><h3>资源列表</h3></caption>
+				<thead>
+					<tr>
+						<th>资源名</th>
+						<th>资源数量</th>
+					</tr>
+				</thead>
+				<tbody v-for='item in project.resources'>
+					<tr v-bind:id='item.name' data-toggle = "modal" data-target = "#editResource" onclick = "setResource(this)">
+						<th>{{item.name}}</th>
+						<th>{{item.number}}</th>
+					</tr>
+				</tbody>
+			</table>
+			<div class='row'>
+                <div class='col' style='text-align: right;'>
+                    <img data-toggle="modal" data-target="#addSource" src='./image/projectDetail/add.png' alt='add' />
+                </div>
+            </div>
+			<br/><br/>
+        </div>
+        <br/>
+    </div>
+	<div class="modal fade" id="addSource">
+		<div class="modal-dialog">
+			<div class="modal-content">
+		
+			<!-- 模态框头部 -->
+			<div class="modal-header">
+				<h4 class="modal-title">添加资源</h4>
+				<button type="button" class="close" data-dismiss="modal">&times;</button>
+			</div>
+		
+			<!-- 模态框主体 -->
+			<div class="modal-body">
+				<div class="form-group">
+					<label for="sourceName">资源名:</label>
+                    <input id='sourceName' type="text" class="form-control" style='width:50%;display:inline;' placeholder="resourceName" /><br/>
+					<label for="sourceNum">资源数量:</label>
+                    <input id='sourceNum' type="text" class="form-control" style='width:50%;display:inline;' placeholder="resourceNum" /><br/>
+				</div>
+			</div>
+		
+			<!-- 模态框底部 -->
+			<div class="modal-footer">
+				<button type="button" class="btn btn-success" onclick='submitSource()'>确认</button>
+				<button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
+			</div>
+		
+			</div>
+		</div>
+	</div>
+	<div class="modal fade" id="editResource">
+		<div class="modal-dialog">
+			<div class="modal-content">
+		
+			<!-- 模态框头部 -->
+			<div class="modal-header">
+				<h4 class="modal-title">修改资源</h4>
+				<button type="button" class="close" data-dismiss="modal">&times;</button>
+			</div>
+		
+			<!-- 模态框主体 -->
+			<div class="modal-body">
+				<div class="form-group">
+					<label for = "sourceNameR">资源名：</label>
+					<section id ='sourceNameR' style = 'display:inline;'></section>
+					<br/>
+					<label for="sourceNumR">资源数量:</label>
+                    <input id='sourceNumR' type="text" class="form-control" style='width:50%;display:inline;' placeholder="resourceNum"/><br/>
+				</div>
+			</div>
+		
+			<!-- 模态框底部 -->
+			<div class="modal-footer">
+				<button type="button" class="btn btn-success" onclick='submitSourceR()'>确认</button>
+				<button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
+			</div>
+		
+			</div>
+		</div>
+	</div>
+</div>
+</body>
+<script>
+    var usr = new Vue({
+        el: '#user',
+        data: {
+            username: 'dadagum'
+        }
+    })
+
+    $(document).ready(function() {
+        $('#wrapper').css('height',screen.availHeight.toString());
+        getSource(123);
+    })
+
+    function getSource(projectId) {
+        var p = new Vue ({
+            el: '#vueResource',
+            data: {
+                project: '',
+            },
+            methods:{
+                post:function(){
+                    this.$http.post('http://110.64.91.103/itpm/test/getResourceList.php',{projectId: projectId},{emulateJSON: true}).then(function(res){
+                        this.project = res.body;
+                    },function(res){
+                        console.log(res.status);
+                    })
+                }
+            },
+            components: {
+                vuejsDatepicker
+            }
+        })
+        p.post();
+    }
+	
+	function submitSource(){
+		snam = $('#sourceName').val();
+		snum = $('#sourceNum').val();
+		alert(snam);
+	}
+	
+	function submitSourceR(){
+		snam = $('#sourceNameR').val();
+		snum = $('#sourceNumR').val();
+		alert(snam);
+	}
+	
+	function setResource(item){
+		$('#sourceNameR').text(item.id);
+	}
+
+</script>
+</html>
