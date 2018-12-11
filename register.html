@@ -87,7 +87,8 @@
                         alert('密码非法！应为5~20位。');
                         return;
                 }
-                $.post('./test/register.php',{username: username,password: password},function(res){
+                $.post('http://119.23.76.43/api/registration',{userName: username,password: password},function(res){
+                        alert(res);
                         if(res.status=='ok')
                         {
                                 window.location.href='./login.html';
