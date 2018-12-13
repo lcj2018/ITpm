@@ -96,6 +96,8 @@
 </body>
 <script>
     var Token = getCookie("itpmToken");
+    var userId = getCookie('itpm-userId');
+    var groupId = getPar('groupId');
     Vue.http.headers.common['Authorization'] = Token;
 
     groupId = getPar('groupId');
@@ -151,7 +153,7 @@
         taskDescription = $('taskDescription').val();
         $.ajax({
             method: "POST",
-            url: "http://119.23.76.43/api//projects",
+            url: "http://119.23.76.43/api/projects",
             data: {
                 name: taskName, 
                 description: taskDescription,
@@ -166,6 +168,9 @@
             },
             success: function(res){
                 alert('Success!');
+            },
+            error: function(res){
+                alert(res.message);
             }
         })
     }
