@@ -10,6 +10,7 @@
         <link type="text/css" rel="stylesheet" href="css/teamManagement.css" />
         <script type="text/javascript" src="https://cdn.staticfile.org/vue/2.2.2/vue.min.js"></script>
         <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.1.0/css/bootstrap.min.css">
+        <script src="./js/http.js"></script>
         <script src="https://cdn.staticfile.org/jquery/3.2.1/jquery.min.js"></script>
         <script src="https://cdn.staticfile.org/popper.js/1.12.5/umd/popper.min.js"></script>
         <script src="https://cdn.staticfile.org/twitter-bootstrap/4.1.0/js/bootstrap.min.js"></script>
@@ -96,6 +97,9 @@
 <script>
     var Token = getCookie("itpmToken");
     Vue.http.headers.common['Authorization'] = Token;
+
+    groupId = getPar('groupId');
+    userId = getPar('userId');
     
     var vm = new Vue ({
         el: '#user',
@@ -140,23 +144,30 @@
     }
 
     function addNewProject(){
-        
-    }
-
-    function getCookie(c_name)
-    {
-        if (document.cookie.length>0)
-        {
-            c_start=document.cookie.indexOf(c_name + "=")
-            if (c_start!=-1)
-            { 
-                c_start=c_start + c_name.length+1 
-                c_end=document.cookie.indexOf(";",c_start)
-                if (c_end==-1) c_end=document.cookie.length
-                return unescape(document.cookie.substring(c_start,c_end))
-            } 
-        }
-        return ""
+        taskName = $('#taskName').val();
+        startDate = $('startDate').val();
+        endDate = $('endDate').val();
+        respseName = $('respName').val();
+        taskDescription = $('taskDescription').val();
+        $.ajax({
+            method: "POST",
+            url: "http://119.23.76.43/api//projects",
+            data: {
+                name: taskName, 
+                description: taskDescription,
+                startTime: startDate, 
+                endTime: endDate,
+                gid: groupId, 
+                uid: userId
+            },
+            dataType: "json",
+            beforeSend: function(res){
+                res.setRequestHeader("Authorization",Token);
+            },
+            success: function(res){
+                alert('Success!');
+            }
+        })
     }
 </script>
 </html>
