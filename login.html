@@ -92,7 +92,8 @@
                 }
                 $.post("http://119.23.76.43/api/authentication",{userName: username, password: password}).then(function(res){
                         setCookie('itpm-userId',res.data.id);
-                        setCookie('itpm-userId',res.data.name);
+                        setCookie('itpm-userName',res.data.name);
+                        setCookie('item-token',res.getResponseHeader('Authorization'));
                         window.location.href='./teamManagement.html';
                 },function(res){
                         $('#warning').append("<div class='alert alert-danger'><a href='#' class='close' data-dismiss='alert'>&times;</a>"+res.message+"</div>");
