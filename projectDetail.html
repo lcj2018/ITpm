@@ -10,6 +10,7 @@
         <link type="text/css" rel="stylesheet" href="./css/projectDetail.css" />
         <script type="text/javascript" src="https://cdn.staticfile.org/vue/2.2.2/vue.min.js"></script>
         <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.1.0/css/bootstrap.min.css">
+        <script src="./js/http.js"></script>
         <script src="https://cdn.staticfile.org/jquery/3.2.1/jquery.min.js"></script>
         <script src="https://cdn.staticfile.org/popper.js/1.12.5/umd/popper.min.js"></script>
         <script src="https://cdn.staticfile.org/twitter-bootstrap/4.1.0/js/bootstrap.min.js"></script>
@@ -45,7 +46,7 @@
                 <div class='col'><strong>任务</strong></div>
             </div>
             <div class='row'>
-                <div v-for='item in project.tasks'>
+                <div v-for='item in missionList'>
                     <div v-bind:id='getId(item.taskId)' class='square' onclick='jumpTo(this)'>
                         <div style='position:relative;top:20%;'><img src='./image/projectDetail/task.png' alt='task' /></div>
                         <div style='position:relative;top:40%;'>{{item.name}}</div>
@@ -61,7 +62,7 @@
                 <div class='col'><strong>成员</strong></div>
             </div>
             <div class='row'>
-                <div v-for='item in project.members'>
+                <div v-for='item in memberList'>
                     <div v-bind:id='item.name' class='square' data-toggle="modal" data-target="#delMemModal" onclick="alertDelMemModal(this)" src='./image/projectDetail/add.png'>
                         <div style='position:relative;top:20%;'><img src='./image/projectDetail/member.png' alt='member' /></div>
                         <div style='position:relative;top:30%;'>{{item.name}}</div>
@@ -72,7 +73,7 @@
                 </div>
             </div>
             <!-- 讨论 -->
-            <br/>
+            <!-- <br/>
             <div class='row' style='font-size: 1.5rem;'>
                 <div class='col'><strong>讨论</strong></div>
             </div>
@@ -87,7 +88,7 @@
                 <div class='col' style='text-align: right;'>
                     <img data-toggle="modal" data-target="#addDissModal" src='./image/projectDetail/add.png' alt='add' />
                 </div>
-            </div>
+            </div> -->
             <!-- 文件 -->
             <div class='row' style='font-size: 1.5rem;'>
                 <div class='col'><strong>文件</strong></div>
@@ -102,9 +103,9 @@
             <div class='row' style='font-size: 1.5rem;'>
                 <div class='col'><strong>进度管理</strong>&nbsp;&nbsp;<a href='./processManagement.html' alt='查看详情'>查看详情</a></div>
             </div>
-            <div class='row' style='font-size: 1.5rem;'>
+            <!-- <div class='row' style='font-size: 1.5rem;'>
                 <div class='col'>共计有{{project.progress.total}}项任务，其中过期{{project.progress.out}}项，已完成{{project.progress.completed}}项。</div>
-            </div>
+            </div> -->
             <br/>
             <!-- addTaskModal -->
             <div class="modal fade" id="addTaskModal">
@@ -253,19 +254,22 @@
     </div>
 </div>
 <script>
-    var Token = getCookie("itpmToken");
+    var Token = getCookie("itpm-token");
+    var userName = getCookie("itpm-userName");
+    var userId = getCookie('itpm-userId');
+    var projectId = getPar('projectId');
     Vue.http.headers.common['Authorization'] = Token;
     
     var usr = new Vue({
         el: '#user',
         data: {
-            username: 'dadagum'
+            username: userName
         }
     })
 
     $(document).ready(function() {
         //$('#wrapper').css('height',screen.availHeight.toString());
-        getProject(123);
+        getProject(projectId);
     })
 
     function getProject(projectId) {
@@ -273,14 +277,25 @@
             el: '#vueProject',
             data: {
                 project: '',
+                missionList: [],
+                memberList: []
             },
             methods:{
                 post:function(){
-                    this.$http.post('./test/getProject.php',{projectId: projectId},{emulateJSON: true}).then(function(res){
-                        this.project = res.body.project;
+                    //project
+                    this.$http.get('http://119.23.76.43/api/projects'+projectId.toString()).then(function(res){
+                        this.project = res.data;
+                    })
+                    //missionList
+                    this.$http.post('./test/getProject.php',{projectId: projectId},{emulateJSON: true}).then(function(res){//List
+                        this.missionList = res.data;
                         alertMem(this.project.members);
                     },function(res){
                         console.log(res.status);
+                    })
+                    //memberList
+                    this.$http.get('http://119.23.76.43/api/projects').then(function(res){
+                        this.project = res.data;
                     })
                 },
                 getId:function(index){
@@ -302,12 +317,12 @@
         }
     }
 
-    function submitDiss(){
-        text=$('#dissContent').val();
-        $.post('./test/addDiss.php',{cotent: text},function(res){
-            alert(res);
-        },"json");
-    }
+    // function submitDiss(){
+    //     text=$('#dissContent').val();
+    //     $.post('./test/addDiss.php',{cotent: text},function(res){
+    //         alert(res);
+    //     },"json");
+    // }
 
     function addNewTask(){
         name=$('taskName').val();
@@ -315,14 +330,28 @@
         endDate=$('#endDate').val();
         respsename=$('#respseName').val();
         description=$('#taskDescription').val();
-        $.post('./test/addNewTask.php',{taskName: name,startDate: startDate,endDate: endDate,respseName: respsename,taskDescription: description},function(res){
-            if(res.status=='ok')
-            {
-                alert('Success');
-            } else {
-                alert('Err: '+res.msg);
+
+        $.ajax({
+            method: "POST",
+            url: "http://119.23.76.43/api//missions",
+            data: {
+                pid: projectId,
+                name: name,
+                details: description,
+                startTime: startDate,
+                endTime: endDate
+            },
+            dataType: "json",
+            beforeSend: function(res){
+                res.setRequestHeader("Authorization",Token);
+            },
+            success: function(res){
+                alert('Success!');
+            },
+            error: function(res){
+                alert(res.message);
             }
-        },"json")
+        })    
     }
     
     function setUserSelector(str)
@@ -336,15 +365,15 @@
     }
 
     function addMem(){
-        name=$('#userSelector');
-        $.post('./test/addMem.php',{username: name},function(res){
-            if(res.status=='ok')
-            {
-                alert('Success!');
-            } else {
-                alert('Err: '+res.msg);
-            }
-        },"json")
+        // name=$('#userSelector');
+        // $.post('./test/addMem.php',{username: name},function(res){
+        //     if(res.status=='ok')
+        //     {
+        //         alert('Success!');
+        //     } else {
+        //         alert('Err: '+res.msg);
+        //     }
+        // },"json")
     }
 
     function alertDelMemModal(item)
@@ -360,22 +389,6 @@
     function jumpTo(res){
         id = res.id.substr(4);
         window.location.href = 'missionManagement.html?groupId=' + id;
-    }
-
-    function getCookie(c_name)
-    {
-        if (document.cookie.length>0)
-        {
-            c_start=document.cookie.indexOf(c_name + "=")
-            if (c_start!=-1)
-            { 
-                c_start=c_start + c_name.length+1 
-                c_end=document.cookie.indexOf(";",c_start)
-                if (c_end==-1) c_end=document.cookie.length
-                return unescape(document.cookie.substring(c_start,c_end))
-            } 
-        }
-        return ""
     }
 </script>
 </html>
