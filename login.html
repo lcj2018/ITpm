@@ -10,6 +10,7 @@
         <link type="text/css" rel="stylesheet" href="./css/login.css" />
         <script type="text/javascript" src="https://cdn.staticfile.org/vue/2.2.2/vue.min.js"></script>
         <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.1.0/css/bootstrap.min.css">
+        <script src="./js/http.js"></script>
         <script src="https://cdn.staticfile.org/jquery/3.2.1/jquery.min.js"></script>
         <script src="https://cdn.staticfile.org/popper.js/1.12.5/umd/popper.min.js"></script>
         <script src="https://cdn.staticfile.org/twitter-bootstrap/4.1.0/js/bootstrap.min.js"></script>
@@ -89,15 +90,13 @@
                         alert('密码为空！');
                         return;
                 }
-                $.post('./test/validate.php',{username: username,password: password},function(res){
-                        if(res.status=='ok')
-                        {
-                                window.location.href='./teamManagement.html';
-                        }
-                        else {
-                                $('#warning').append("<div class='alert alert-danger'><a href='#' class='close' data-dismiss='alert'>&times;</a>错误的用户名或密码</div>");
-                        }
-                },"json")
+                $.post("http://119.23.76.43/api/authentication",{userName: username, password: password}).then(function(res){
+                        setCookie('itpm-userId',res.data.id);
+                        setCookie('itpm-userId',res.data.name);
+                        window.location.href='./teamManagement.html';
+                },function(res){
+                        $('#warning').append("<div class='alert alert-danger'><a href='#' class='close' data-dismiss='alert'>&times;</a>"+res.message+"</div>");
+                },"json");
         }
 </script>
 </body>
