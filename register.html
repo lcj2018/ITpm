@@ -10,6 +10,7 @@
         <link type="text/css" rel="stylesheet" href="./css/login.css" />
         <script type="text/javascript" src="https://cdn.staticfile.org/vue/2.2.2/vue.min.js"></script>
         <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.1.0/css/bootstrap.min.css">
+        <script src="./js/http.js"></script>
         <script src="https://cdn.staticfile.org/jquery/3.2.1/jquery.min.js"></script>
         <script src="https://cdn.staticfile.org/popper.js/1.12.5/umd/popper.min.js"></script>
         <script src="https://cdn.staticfile.org/twitter-bootstrap/4.1.0/js/bootstrap.min.js"></script>
@@ -69,6 +70,9 @@
         </div>
 </div>  
 <script>
+        var Token = getCookie("itpmToken");
+        Vue.http.headers.common['Authorization'] = Token;
+
         $(document).ready(function(){
                 $('#wrapper').css('height',screen.availHeight.toString());
         })
@@ -87,16 +91,28 @@
                         alert('密码非法！应为5~20位。');
                         return;
                 }
-                $.post('http://119.23.76.43/api/registration',{userName: username,password: password},function(res){
-                        alert(res);
-                        if(res.status=='ok')
-                        {
-                                window.location.href='./login.html';
+                $.ajax({
+                        method: "POST",
+                        url: "http://119.23.76.43/api/registration",
+                        data: {
+                                userName: username,
+                                password: password 
+                        },
+                        dataType: "json",
+                        beforeSend: function(res){
+                                res.setRequestHeader("Authorization",Token);
+                        },
+                        success: function(res){
+                                if(res.status=='ok')
+                                {
+                                        alert('注册成功，您的用户id为'+res.data.id.toString());
+                                        window.location.href='./login.html';
+                                }
+                                else {
+                                        $('#warning').append("<div class='alert alert-danger'><a href='#' class='close' data-dismiss='alert'>&times;</a>" + res.message + "</div>");
+                                }
                         }
-                        else {
-                                $('#warning').append("<div class='alert alert-danger'><a href='#' class='close' data-dismiss='alert'>&times;</a>" + res.message + "</div>");
-                        }
-                },"json")
+                })
         }
 </script>
 </body>
