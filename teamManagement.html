@@ -10,6 +10,7 @@
         <link type="text/css" rel="stylesheet" href="css/teamManagement.css" />
         <script type="text/javascript" src="https://cdn.staticfile.org/vue/2.2.2/vue.min.js"></script>
         <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.1.0/css/bootstrap.min.css">
+        <script src="./js/http.js"></script>
         <script src="https://cdn.staticfile.org/jquery/3.2.1/jquery.min.js"></script>
         <script src="https://cdn.staticfile.org/popper.js/1.12.5/umd/popper.min.js"></script>
         <script src="https://cdn.staticfile.org/twitter-bootstrap/4.1.0/js/bootstrap.min.js"></script>
@@ -46,7 +47,7 @@
                             <div class='row'>
                                 <br/><br/>
                                 <div class='col' data-toggle='collapse' v-bind:data-target="getId('#showMem',index)" style='font-size: 1.5rem;'><p>{{item.name}}<font style='color: #CCCCCC;'>(共{{item.memberCnt}}人)</font></p></div>
-                                <div class='col' data-toggle='collapse' data-target="getId('#showMem',index)"></div>
+                                <div class='col' data-toggle='collapse' v-bind:data-target="getId('#showMem',index)"></div>
                                 <div class='col' style='float: right;text-align: right;'>
                                     <img id='addMem' v-if='item.leaderFlag=="true"' data-toggle="modal" data-target="#addMemModal" src='./image/teamManagement/add.png' alt='addMem' />&nbsp;
                                     <img id='delTeam' data-toggle="modal" data-target="#delTeamModal" src='./image/teamManagement/del.png' alt='delTeam' />
@@ -87,7 +88,7 @@
                                                 </div>
                                             
                                                 <div class="modal-footer">
-                                                    <button type='button' class='btn btn-success' onclick='addNewMem()'>增加</button>
+                                                    <button type='button' class='btn btn-success' onclick='addNewMem(item)'>增加</button>
                                                     <button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
                                                 </div>
                                         
@@ -105,11 +106,11 @@
                                                     <div class='container'>
                                                         <div class='row'>
                                                             <div class='col'>
-                                                                <div v-if='item.leader==member.name' style='height:2rem;width:2rem;border-radius:100%;background-color:#f05654;float:left;'></div>
+                                                                <div v-if='item.uid==member.id' style='height:2rem;width:2rem;border-radius:100%;background-color:#f05654;float:left;'></div>
                                                                 <div v-else style='height:2rem;width:2rem;border-radius:100%;background-color:#ffc64b;float:left;'></div>
-                                                                {{member.name}}
+                                                                {{member.userName}}
                                                             </div>
-                                                            <div class='col'>{{member.mail}}</div>
+                                                            <div class='col'>{{member.phone}}</div>
                                                             <div class='col' style='text-align: right;'>
                                                                 <img v-if='item.leaderFlag=="true"' id='delMem' data-toggle="modal" data-target="#delMemModal" src='./image/teamManagement/del.png' alt='delMem' style='height:2rem;width:2rem;'/>
                                                             </div>
@@ -190,6 +191,7 @@
     </div>
 </body>
 <script>
+    //119.23.76.43/api/groups
     var Token = getCookie("itpmToken");
     Vue.http.headers.common['Authorization'] = Token;
 
@@ -223,14 +225,14 @@
                     return str+index.toString();
                 },
                 delTeam:function(team){
-                    this.$http.post('./test/delTeam.php',{userId: srcUserId,groupId: team.groupId},{enlateJSON: true}).then(function(res){
+                    this.$http.post('http://119.23.76.43/api/groups/'+team.id.toString(),{enlateJSON: true}).then(function(res){
                         alert('Success!');
                     },function(res){
                         alert('Err:' + res.status);
                     })
                 },
                 delMem:function(team,member){
-                    this.$http.post('./test/delMem.php',{userId: srcUserId,groupId: team.groupId,destUserId: member.userId},{enlateJSON: true}).then(function(res){
+                    this.$http.post('http://119.23.76.43/api/groups/'+team.id.toString()+'/users/'+member.id.toString(),{enlateJSON: true}).then(function(res){
                         alert('Success!');
                     },function(res){
                         alert('Err:' + res.status);
@@ -243,6 +245,7 @@
 
     function doSearch()
     {
+        alert('暂不可用！');
         name = $('#addedUsername').val();
         $.post('./test/searchUser.php',{name: name},function(res){
             if(res.status != "ok")
@@ -261,38 +264,50 @@
     function addNewTeam(){
         name = $('#teamName').val();
         description = $('#teamDescription').val();
-        $.post('./test/addTeam.php',{userId: srcUserId,name: name,description: description},function(res){
-            if(res.status =='ok')
-            {
-                alert('Success!');
-            } else {
-                alert(res.message);
+        $.ajax({
+            method: "POST",
+            url: "http://119.23.76.43/api/groups",
+            data: {
+                name: name,
+                uid: currUser 
+            },
+            dataType: "json",
+            beforeSend: function(res){
+                res.setRequestHeader("Authorization",Token);
+            },
+            success: function(res){
+                if(res.status =='ok')
+                {
+                    alert('Success!');
+                } else {
+                    alert(res.message);
+                }
             }
-        },"json")
+        })
     }
 
-    function addNewMem(){
+    function addNewMem(item){
         name = $('#addedUsername').val();
-        $.post('./test/addMem.php',{userId: srcUserId,name: name,groupId: groupId},function(res){
-            if(res.status == 'ok')alert('Success');
-            else alert(status.mess);
-        },"json")
-    }
-    
-    function getCookie(c_name)
-    {
-        if (document.cookie.length>0)
-        {
-            c_start=document.cookie.indexOf(c_name + "=")
-            if (c_start!=-1)
-            { 
-                c_start=c_start + c_name.length+1 
-                c_end=document.cookie.indexOf(";",c_start)
-                if (c_end==-1) c_end=document.cookie.length
-                return unescape(document.cookie.substring(c_start,c_end))
-            } 
-        }
-        return ""
+
+        $.ajax({
+            method: "POST",
+            url: "http://119.23.76.43/api/groups/"+item.id.toString()+"users",
+            data: {
+                name: name//uid
+            },
+            dataType: "json",
+            beforeSend: function(res){
+                res.setRequestHeader("Authorization",Token);
+            },
+            success: function(res){
+                if(res.status =='ok')
+                {
+                    alert('Success!');
+                } else {
+                    alert(res.message);
+                }
+            }
+        })
     }
 </script>
 </html>
