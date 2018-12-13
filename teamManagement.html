@@ -192,7 +192,8 @@
 </body>
 <script>
     //119.23.76.43/api/groups
-    var Token = getCookie("itpmToken");
+    var Token = getCookie("itpm-token");
+    var userName = getCook('itpm-userName');
     Vue.http.headers.common['Authorization'] = Token;
 
     $(document).ready(function() {
@@ -203,7 +204,7 @@
     var vm = new Vue ({
         el: '#user',
         data: {
-            username: 'dadagum'
+            username: userName
         }
     })
 
@@ -276,12 +277,10 @@
                 res.setRequestHeader("Authorization",Token);
             },
             success: function(res){
-                if(res.status =='ok')
-                {
-                    alert('Success!');
-                } else {
-                    alert(res.message);
-                }
+                alert('Success!');
+            },
+            error: function(res){
+                alert(res.message);
             }
         })
     }
@@ -300,12 +299,10 @@
                 res.setRequestHeader("Authorization",Token);
             },
             success: function(res){
-                if(res.status =='ok')
-                {
-                    alert('Success!');
-                } else {
-                    alert(res.message);
-                }
+                alert('Success!');
+            },
+            error: function(res){
+                alert(res.message);
             }
         })
     }
