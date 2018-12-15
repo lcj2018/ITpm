@@ -34,3 +34,14 @@ function getPar(par){
     }
     return get_par;
 }
+
+function normalizeDate(date)
+{
+    month = ['Emp','Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    str = date.split(" ");
+    for(var i=1;i<=12;++i)
+        if(month[i] == str[1])pos = i;
+    if(pos<10)date = str[2]+' 0'+i.toString()+' '+str[0];
+    else date = str[2]+' '+i.toString()+' '+str[0];
+    return date;
+}

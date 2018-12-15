@@ -146,8 +146,8 @@
     }
 
     function addNewProject(){
-        taskName = $('#taskName').val();
-        startDate = $('startDate').val();
+        taskName = normalizeDate($('#taskName').val());
+        startDate = normalizeDate($('startDate').val());
         endDate = $('endDate').val();
         respseName = $('respName').val();
         taskDescription = $('taskDescription').val();

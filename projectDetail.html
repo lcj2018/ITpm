@@ -73,7 +73,7 @@
                 </div>
             </div>
             <!-- 讨论 -->
-            <!-- <br/>
+            <br/>
             <div class='row' style='font-size: 1.5rem;'>
                 <div class='col'><strong>讨论</strong></div>
             </div>
@@ -88,7 +88,7 @@
                 <div class='col' style='text-align: right;'>
                     <img data-toggle="modal" data-target="#addDissModal" src='./image/projectDetail/add.png' alt='add' />
                 </div>
-            </div> -->
+            </div>
             <!-- 文件 -->
             <div class='row' style='font-size: 1.5rem;'>
                 <div class='col'><strong>文件</strong></div>
@@ -317,16 +317,16 @@
         }
     }
 
-    // function submitDiss(){
-    //     text=$('#dissContent').val();
-    //     $.post('./test/addDiss.php',{cotent: text},function(res){
-    //         alert(res);
-    //     },"json");
-    // }
+    function submitDiss(){
+        text=$('#dissContent').val();
+        $.post('./test/addDiss.php',{cotent: text},function(res){
+            alert(res);
+        },"json");
+    }
 
     function addNewTask(){
-        name=$('taskName').val();
-        startDate=$('#startDate').val();
+        name=normalizeDate($('taskName').val());
+        startDate=normalizeDate($('#startDate').val());
         endDate=$('#endDate').val();
         respsename=$('#respseName').val();
         description=$('#taskDescription').val();
