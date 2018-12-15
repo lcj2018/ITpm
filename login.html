@@ -93,7 +93,7 @@
                 $.post("http://110.64.91.112:8081/api/authentication",{userName: username, password: password}).then(function(res,status,xhr){
                         setCookie('itpm-userId',res.data.id);
                         setCookie('itpm-userName',res.data.userName);
-                        setCookie('item-token',xhr.getResponseHeader('Authorization'));
+                        setCookie('itpm-token',xhr.getResponseHeader('Authorization'));
                         window.location.href='./teamManagement.html';
                 },"json").error(function(res){
                         $('#warning').append("<div class='alert alert-danger'><a href='#' class='close' data-dismiss='alert'>&times;</a>"+res.message+"</div>");
