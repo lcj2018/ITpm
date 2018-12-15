@@ -193,12 +193,13 @@
 <script>
     //119.23.76.43/api/groups
     var Token = getCookie("itpm-token");
-    var userName = getCook('itpm-userName');
-    Vue.http.headers.common['Authorization'] = Token;
+    var userName = getCookie('itpm-userName');
+    var userId = getCookie('itpm-userId');
+    Vue.http.headers.common['authorization'] = Token;
 
     $(document).ready(function() {
         $('#wrapper').css('height',screen.availHeight.toString());
-        getTeamList(123);
+        getTeamList(userId);
     })
 
     var vm = new Vue ({
@@ -212,12 +213,13 @@
         var tl = new Vue ({
             el: '#vueTeamList',
             data: {
-                teamList: []
+                teamList: [],
+                teamMem: []
             },
             methods:{
-                post:function(){
-                    this.$http.post('./test/getTeamList.php',{userId: srcUserId},{emulateJSON: true}).then(function(res){
-                        this.teamList = res.body.teamList;
+                init:function(){
+                    this.$http.get('http://110.64.91.112:8081/api/groups').then(function(res){
+                        this.teamList = res.data;
                     },function(res){
                         console.log(res.status);
                     })
@@ -226,14 +228,14 @@
                     return str+index.toString();
                 },
                 delTeam:function(team){
-                    this.$http.post('http://119.23.76.43/api/groups/'+team.id.toString(),{enlateJSON: true}).then(function(res){
+                    this.$http.post('http://110.64.91.112:8081/api/groups/'+team.id.toString(),{enlateJSON: true}).then(function(res){
                         alert('Success!');
                     },function(res){
                         alert('Err:' + res.status);
                     })
                 },
                 delMem:function(team,member){
-                    this.$http.post('http://119.23.76.43/api/groups/'+team.id.toString()+'/users/'+member.id.toString(),{enlateJSON: true}).then(function(res){
+                    this.$http.post('http://110.64.91.112:8081/api/groups/'+team.id.toString()+'/users/'+member.id.toString(),{enlateJSON: true}).then(function(res){
                         alert('Success!');
                     },function(res){
                         alert('Err:' + res.status);
@@ -241,7 +243,7 @@
                 }
             }
         })
-        tl.post();
+        tl.init();
     }
 
     function doSearch()
@@ -267,13 +269,13 @@
         description = $('#teamDescription').val();
         $.ajax({
             method: "POST",
-            url: "http://119.23.76.43/api/groups",
+            url: "http://110.64.91.112:8081/api/groups",
             data: {
-                name: name,
-                uid: currUser 
+                name: name
             },
             dataType: "json",
             beforeSend: function(res){
+                alert('123');
                 res.setRequestHeader("Authorization",Token);
             },
             success: function(res){
@@ -290,7 +292,7 @@
 
         $.ajax({
             method: "POST",
-            url: "http://119.23.76.43/api/groups/"+item.id.toString()+"users",
+            url: "http://110.64.91.112:8081/api/groups/"+item.id.toString()+"users",
             data: {
                 name: name//uid
             },
