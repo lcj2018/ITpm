@@ -49,6 +49,13 @@
                                         </div>
                                         <br/>
                                         <div class='row'>
+                                                <div class='col' style='text-align: left;'>
+                                                        <label for='phone' style='font-size:1.2rem;'>手机：</label>&nbsp;&nbsp;&nbsp;&nbsp;
+                                                        <input type='text' id='phone' />
+                                                </div>
+                                        </div>
+                                        <br/>
+                                        <div class='row'>
                                                 <div class='col'>
                                                         <div id='warning'></div>
                                                 </div>
@@ -77,8 +84,9 @@
         {
                 username=$('#username').val();
                 password=$('#password').val();
+                phone=$('#phone').val();
                 if(username.length<5||username.length>20)
-                {
+                {               
                         alert('用户名非法！应为5~20位。');
                         return;
                 }
@@ -86,14 +94,14 @@
                 {
                         alert('密码非法！应为5~20位。');
                         return;
-                }
-                $.post('http://119.23.76.43/api/registration',{userName: username,password: password},function(res){
+                }            
+                $.post('http://110.64.91.112:8081/api/registration',{userName: username,password: password,phone: phone},function(res){
                         alert("注册成功，您的用户id为"+res.data.id);
                         window.location.href='./login.html';
-                },function(res){
+                },"json"),error(function(res){
                         $('#warning').append("<div class='alert alert-danger'><a href='#' class='close' data-dismiss='alert'>&times;</a>" + res.message + "</div>");
-                },"json");
+                });
         }
-</script>
+</script>       
 </body>
 </html>
