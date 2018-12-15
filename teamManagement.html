@@ -46,7 +46,7 @@
                         <div class='container'>
                             <div class='row'>
                                 <br/><br/>
-                                <div class='col' data-toggle='collapse' v-bind:data-target="getId('#showMem',index)" style='font-size: 1.5rem;'><p>{{item.name}}<font style='color: #CCCCCC;'>(共{{item.memberCnt}}人)</font></p></div>
+                                <div class='col' data-toggle='collapse' v-bind:data-target="getId('#showMem',index)" style='font-size: 1.5rem;'><p>{{item.name}}<!--font style='color: #CCCCCC;'>(共{{item.memberCnt}}人)</font--></p></div>
                                 <div class='col' data-toggle='collapse' v-bind:data-target="getId('#showMem',index)"></div>
                                 <div class='col' style='float: right;text-align: right;'>
                                     <img id='addMem' v-if='item.leaderFlag=="true"' data-toggle="modal" data-target="#addMemModal" src='./image/teamManagement/add.png' alt='addMem' />&nbsp;
@@ -195,6 +195,7 @@
     var Token = getCookie("itpm-token");
     var userName = getCookie('itpm-userName');
     var userId = getCookie('itpm-userId');
+    Vue.http.headers.common['Authorization'] = Token;
 
     $(document).ready(function() {
         $('#wrapper').css('height',screen.availHeight.toString());
@@ -215,16 +216,10 @@
                 teamList: [],
                 teamMem: []
             },
-            http: {
-                root: '/',
-                headers: {
-                    authorization: Token
-                }
-            },
             methods:{
                 init:function(){
                     this.$http.get('http://110.64.91.112:8081/api/groups').then(function(res){
-                        this.teamList = res.data;
+                        this.teamList = res.data.data;
                     },function(res){
                         console.log(res.status);
                     })
@@ -233,10 +228,10 @@
                     return str+index.toString();
                 },
                 delTeam:function(team){
-                    this.$http.post('http://110.64.91.112:8081/api/groups/'+team.id.toString(),{enlateJSON: true}).then(function(res){
+                    this.$http.delete('http://110.64.91.112:8081/api/groups/'+team.id.toString(),{enlateJSON: true}).then(function(res){
                         alert('Success!');
                     },function(res){
-                        alert('Err:' + res.status);
+                        alert('Err:' + res.data.message);
                     })
                 },
                 delMem:function(team,member){
@@ -280,7 +275,6 @@
             },
             dataType: "json",
             beforeSend: function(res){
-                alert('123');
                 res.setRequestHeader("Authorization",Token);
             },
             success: function(res){
