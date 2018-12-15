@@ -23,7 +23,7 @@
             <p class='pt-left'>项目开发管理系统</p>
         </div>
         <div class='col'>
-            <p id='user' class='pt-right'>{{username}}&nbsp;&nbsp;<a href='#'>退出</a></p>
+            <p id='user' class='pt-right'>{{username}}&nbsp;&nbsp;<a href='login.html'>退出</a></p>
         </div>
     </div>
 </div>
@@ -195,7 +195,6 @@
     var Token = getCookie("itpm-token");
     var userName = getCookie('itpm-userName');
     var userId = getCookie('itpm-userId');
-    Vue.http.headers.common['authorization'] = Token;
 
     $(document).ready(function() {
         $('#wrapper').css('height',screen.availHeight.toString());
@@ -215,6 +214,12 @@
             data: {
                 teamList: [],
                 teamMem: []
+            },
+            http: {
+                root: '/',
+                headers: {
+                    authorization: Token
+                }
             },
             methods:{
                 init:function(){
