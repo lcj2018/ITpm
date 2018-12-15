@@ -10,6 +10,7 @@
         <link type="text/css" rel="stylesheet" href="css/teamManagement.css" />
         <script type="text/javascript" src="https://cdn.staticfile.org/vue/2.2.2/vue.min.js"></script>
         <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.1.0/css/bootstrap.min.css">
+        <script src="./js/http.js"></script>
         <script src="https://cdn.staticfile.org/jquery/3.2.1/jquery.min.js"></script>
         <script src="https://cdn.staticfile.org/popper.js/1.12.5/umd/popper.min.js"></script>
         <script src="https://cdn.staticfile.org/twitter-bootstrap/4.1.0/js/bootstrap.min.js"></script>
@@ -49,7 +50,7 @@
             <div class='row'>
                 <div v-for='(item,index) in teamList'>
                     <div class='col'>
-                        <div v-bind:id='getId(item.groupId)' class='square' onclick='jumpTo(this)'>
+                        <div v-bind:id='getId(item.id)' class='square' onclick='jumpTo(this)'>
                             <div style='position:relative;top:20%;'><img src='./image/teamSelection/team.png' alt='task' /></div>
                             <div style='position:relative;top:30%;'>{{item.name}}</div>
                         </div>
@@ -63,7 +64,8 @@
 </body>
 <script>
     var Token = getCookie("itpm-token");
-    var userName = getCookie('item-userName');
+    var userName = getCookie('itpm-userName');
+    var userId = getCookie('itpm-userId');
     Vue.http.headers.common['Authorization'] = Token;
 
     var vm = new Vue ({
@@ -75,7 +77,7 @@
 
     $(document).ready(function() {
         $('#wrapper').css('height',screen.availHeight.toString());
-        getTeamList(123);
+        getTeamList(userId);
     })
 
     function getTeamList(srcUserId) {
@@ -85,11 +87,11 @@
                 teamList: []
             },
             methods:{
-                post:function(){
-                    this.$http.post('./test/getTeamList.php',{userId: srcUserId},{emulateJSON: true}).then(function(res){
-                        this.teamList = res.body.teamList;
+                init:function(){
+                    this.$http.get('http://110.64.91.112:8081/api/groups').then(function(res){
+                        this.teamList = res.data.data;
                     },function(res){
-                        console.log(res.status);
+                        alert('Err:'+res.data.message);
                     })
                 },
                 getId:function(index){
@@ -97,12 +99,13 @@
                 }
             }
         })
-        tl.post();
+        tl.init();
     }
 
     function jumpTo(res){
         id = res.id.substr(4);
-        window.location.href = 'projectManagement.html?groupId=' + id;
+        setCookie('itpm-groupId',id);
+        window.location.href = 'projectManagement.html';
     }
 </script>
 </html>
