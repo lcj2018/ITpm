@@ -41,7 +41,7 @@ function normalizeDate(date)
     str = date.split(" ");
     for(var i=1;i<=12;++i)
         if(month[i] == str[1])pos = i;
-    if(pos<10)date = str[2]+' 0'+i.toString()+' '+str[0];
-    else date = str[2]+' '+i.toString()+' '+str[0];
+    if(pos<10)date = str[2]+'-0'+pos.toString()+'-'+str[0];
+    else date = str[2]+'-'+pos.toString()+'-'+str[0];
     return date;
 }
