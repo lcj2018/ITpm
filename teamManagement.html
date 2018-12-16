@@ -49,7 +49,7 @@
                                 <div class='col' data-toggle='collapse' v-bind:data-target="getId('#showMem',index)" style='font-size: 1.5rem;'><p>{{item.name}}<!--font style='color: #CCCCCC;'>(共{{item.memberCnt}}人)</font--></p></div>
                                 <div class='col' data-toggle='collapse' v-bind:data-target="getId('#showMem',index)"></div>
                                 <div class='col' style='float: right;text-align: right;'>
-                                    <img id='addMem' v-if='item.uid==userId' data-toggle="modal" data-target="#addMemModal" src='./image/teamManagement/add.png' alt='addMem' />&nbsp;
+                                    <img id='addMem' v-if='item.uid==userId' data-toggle="modal" v-bind:data-target="getId('#addMemModal',item.id)" src='./image/teamManagement/add.png' alt='addMem' />&nbsp;
                                     <img id='delTeam' data-toggle="modal" data-target="#delTeamModal" src='./image/teamManagement/del.png' alt='delTeam' />
                                     <div class="modal fade" id="delTeamModal">
                                         <div class="modal-dialog">
@@ -72,7 +72,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="modal fade" id="addMemModal">
+                                    <div class="modal fade" v-bind:id="getId('addMemModal',item.id)">
                                         <div class="modal-dialog">
                                             <div class="modal-content">
                                         
@@ -82,13 +82,13 @@
                                                 </div>
                                             
                                                 <div class="modal-body" style='text-align: center;'>
-                                                    <input id='addedUsername' type="text" class="form-control" style='width:50%;display:inline;' placeholder="添加的用户名" />
+                                                    <input v-bind:id="getId('addedUsername',item.id)" type="text" class="form-control" style='width:50%;display:inline;' placeholder="添加的用户id" />
                                                     <img src='./image/teamManagement/search.png' alt='search' onclick='doSearch()'/>
                                                     <div id='searchResult'></div>
                                                 </div>
                                             
                                                 <div class="modal-footer">
-                                                    <button type='button' class='btn btn-success' onclick='addNewMem(item)'>增加</button>
+                                                    <button v-bind:id="getId('addButton',item.id)" type='button' class='btn btn-success' onclick='addNewMem(this)'>增加</button>
                                                     <button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
                                                 </div>
                                         
@@ -99,27 +99,7 @@
                             </div>
                             <div class='row'>
                                 <div v-bind:id="getId('showMem',index)" class='collapse container' style='font-size:1.5rem;'>
-                                    <div v-for="member in item.teamMems">
-                                        <div class='row'>
-                                            <div class='col'>
-                                                <div class='teambox'>
-                                                    <div class='container'>
-                                                        <div class='row'>
-                                                            <div class='col'>
-                                                                <div v-if='item.uid==member.id' style='height:2rem;width:2rem;border-radius:100%;background-color:#f05654;float:left;'></div>
-                                                                <div v-else style='height:2rem;width:2rem;border-radius:100%;background-color:#ffc64b;float:left;'></div>
-                                                                {{member.userName}}
-                                                            </div>
-                                                            <div class='col'>{{member.phone}}</div>
-                                                            <div class='col' style='text-align: right;'>
-                                                                <img v-if='item.leaderFlag=="true"' id='delMem' data-toggle="modal" data-target="#delMemModal" src='./image/teamManagement/del.png' alt='delMem' style='height:2rem;width:2rem;'/>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <br/>
-                                            </div>
-                                        </div>
+                                    <div v-for="member in teamMems[index]">
                                         <div class="modal fade" id="delMemModal">
                                             <div class="modal-dialog">
                                                 <div class="modal-content">
@@ -139,6 +119,26 @@
                                                     </div>
                                             
                                                 </div>
+                                            </div>
+                                        </div>
+                                        <div class='row'>
+                                            <div class='col'>
+                                                <div class='teambox'>
+                                                    <div class='container'>
+                                                        <div class='row'>
+                                                            <div class='col'>
+                                                                <div v-if='item.uid==member.id' style='height:2rem;width:2rem;border-radius:100%;background-color:#f05654;float:left;'></div>
+                                                                <div v-else style='height:2rem;width:2rem;border-radius:100%;background-color:#ffc64b;float:left;'></div>
+                                                                {{member.userName}}
+                                                            </div>
+                                                            <div class='col'>{{member.phone}}</div>
+                                                            <div class='col' style='text-align: right;'>
+                                                                <img v-if='item.uid==userId' id='delMem' data-toggle="modal" data-target="#delMemModal" src='./image/teamManagement/del.png' alt='delMem' style='height:2rem;width:2rem;'/>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <br/>
                                             </div>
                                         </div>
                                     </div>
@@ -192,6 +192,7 @@
 </body>
 <script>
     //119.23.76.43/api/groups
+    var URL = 'http://110.64.91.112:8081/api';
     var Token = getCookie("itpm-token");
     var userName = getCookie('itpm-userName');
     var userId = getCookie('itpm-userId');
@@ -223,7 +224,7 @@
                         for(var i=0;i<this.teamList.length;++i)
                         {
                             this.$http.get('http://110.64.91.112:8081/api/groups/'+this.teamList[i].id.toString()+'/users').then(function(res){
-                                this.teamMems+=res.data.data;
+                                this.teamMems.push(res.data.data);
                             },function(res){
                                 alert('Err:'+res.data.message);
                             })
@@ -236,21 +237,18 @@
                     return str+index.toString();
                 },
                 delTeam:function(team){
-                    this.$http.delete('http://110.64.91.112:8081/api/groups/'+team.id.toString(),{enlateJSON: true}).then(function(res){
+                    this.$http.delete(URL+'/groups/'+team.id.toString(),{enlateJSON: true}).then(function(res){
                         alert('Success!');
                     },function(res){
                         alert('Err:' + res.data.message);
                     })
                 },
                 delMem:function(team,member){
-                    this.$http.post('http://110.64.91.112:8081/api/groups/'+team.id.toString()+'/users/'+member.id.toString(),{enlateJSON: true}).then(function(res){
+                    this.$http.post(URL+'/groups/'+team.id.toString()+'/users/'+member.id.toString(),{enlateJSON: true}).then(function(res){
                         alert('Success!');
                     },function(res){
                         alert('Err:' + res.status);
                     })
-                },
-                addNewMem:function(item){
-                    alert(item.id);
                 }
             }
         })
@@ -298,14 +296,16 @@
     }
 
     function addNewMem(item){
-        // alert(item);
-        name = $('#addedUsername').val();
+        id = item.id.substr(9);
+        name = $('#addedUsername'+id).val();
+        alert(id);
+        alert(name);
 
         $.ajax({
             method: "POST",
-            url: "http://110.64.91.112:8081/api/groups/"+item.id.toString()+"users",
+            url: "http://110.64.91.112:8081/api/groups/"+id+"/users",
             data: {
-                name: name//uid
+                uid: name
             },
             dataType: "json",
             beforeSend: function(res){
@@ -315,7 +315,7 @@
                 alert('Success!');
             },
             error: function(res){
-                alert(res.message);
+                alert(res.data.message);
             }
         })
     }
