@@ -50,8 +50,8 @@
                                 <div class='col' data-toggle='collapse' v-bind:data-target="getId('#showMem',index)"></div>
                                 <div class='col' style='float: right;text-align: right;'>
                                     <img id='addMem' v-if='item.uid==userId' data-toggle="modal" v-bind:data-target="getId('#addMemModal',item.id)" src='./image/teamManagement/add.png' alt='addMem' />&nbsp;
-                                    <img id='delTeam' data-toggle="modal" data-target="#delTeamModal" src='./image/teamManagement/del.png' alt='delTeam' />
-                                    <div class="modal fade" id="delTeamModal">
+                                    <img id='delTeam' data-toggle="modal" v-bind:data-target="getId('#delTeamModal',item.id)" src='./image/teamManagement/del.png' alt='delTeam' />
+                                    <div class="modal fade" v-bind:id="getId('delTeamModal',item.id)">
                                         <div class="modal-dialog">
                                             <div class="modal-content">
                                         
@@ -224,7 +224,7 @@
             },
             methods:{
                 init:function(){
-                    this.$http.get('http://110.64.91.112:8081/api/groups').then(function(res){
+                    this.$http.get(URL+'/groups').then(function(res){
                         this.teamList = res.data.data;
                         for(var i=0;i<this.teamList.length;++i)this.getMem(i);
                     },function(res){
@@ -232,7 +232,7 @@
                     })
                 },
                 getMem:function(i){
-                    this.$http.get('http://110.64.91.112:8081/api/groups/'+this.teamList[i].id.toString()+'/users').then(function(res){
+                    this.$http.get(URL+'/groups/'+this.teamList[i].id.toString()+'/users').then(function(res){
                         this.teamMems.push(res.data.data);
                         this.pos.push(i);
                     },function(res){
@@ -246,6 +246,7 @@
                     return str+index.toString()+'-'+indexx.toString();
                 },
                 delTeam:function(team){
+                    // alert(team.id);
                     this.$http.delete(URL+'/groups/'+team.id.toString(),{enlateJSON: true}).then(function(res){
                         alert('Success!');
                     },function(res){
@@ -287,7 +288,7 @@
         description = $('#teamDescription').val();
         $.ajax({
             method: "POST",
-            url: "http://110.64.91.112:8081/api/groups",
+            url: URL+"/groups",
             data: {
                 name: name
             },
@@ -310,7 +311,7 @@
 
         $.ajax({
             method: "POST",
-            url: "http://110.64.91.112:8081/api/groups/"+id+"/users",
+            url: URL+"/groups/"+id+"/users",
             data: {
                 uid: name
             },
