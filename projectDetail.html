@@ -63,7 +63,7 @@
             </div>
             <div class='row'>
                 <div v-for='item in memberList'>
-                    <div v-bind:id='item.userName' class='square' data-toggle="modal" data-target="#delMemModal" onclick="alertDelMemModal(this)" src='./image/projectDetail/add.png'>
+                    <div v-bind:id='get2Id(item.userName,item.id)' class='square' data-toggle="modal" data-target="#delMemModal" onclick="alertDelMemModal(this)" src='./image/projectDetail/add.png'>
                         <div style='position:relative;top:20%;'><img src='./image/projectDetail/member.png' alt='member' /></div>
                         <div style='position:relative;top:30%;'>{{item.userName}}</div>
                     </div>
@@ -235,15 +235,26 @@
                         <img src='./image/projectDetail/memberIcon.png' alt='头像' />
                     </div>
                 </div>
-                <div class='row' style='text-align: center;'>
+                <div class='row'>
                     <div class='col'>
-                        <div class='row' style='display:inline-flex'>
-                            <label for='username'><strong>用户名：</strong></label>
-                            <section id='username'></section>
+                        <div class='wrapper'>
+                            <div class='row'>
+                                <div class='col'></div>
+                                <div class='col' style='display:inline-flex;'>
+                                    <label for='userid'><strong>id：</strong></label>
+                                    <section id='userid'></section>
+                                </div>
+                                <div class='col'></div>
+                            </div>
+                            <div class='row'>
+                                <div class='col'></div>
+                                <div class='col' style='display:inline-flex;'>
+                                    <label for='username'><strong>用户名：</strong></label>
+                                    <section id='username'></section>
+                                </div>
+                                <div class='col'></div>
+                            </div>
                         </div>
-                        <div class='row' style='display:inline-flex'>
-                            <label for='id'><strong>id：</strong></label>
-                            <section id='userid'></section>
                     </div>
                 </div>
             </div>
@@ -308,6 +319,9 @@
                 },
                 getId:function(index){
                     return 'task'+index.toString();
+                },
+                get2Id:function(s,ss){
+                    return s+'-'+ss;
                 }
             },
             components: {
@@ -387,7 +401,29 @@
 
     function delMem()
     {
+        name = $('#userid').text();
+        list = []
+        list.push(name);
+        let user={
+            users: list
+        }
 
+        $.ajax({
+            method: "DELETE",
+            url: URL+"/projects/"+projectId.toString()+'/users',
+            data: JSON.stringify(user),
+            dataType: "json",
+            contentType: "application/json",
+            beforeSend: function(res){
+                res.setRequestHeader("Authorization",Token);
+            },
+            success: function(res){
+                alert('Success!');
+            },
+            error: function(res){
+                alert(res.message);
+            }
+        })          
     }
 
     function addMem(){
@@ -418,7 +454,12 @@
 
     function alertDelMemModal(item)
     {
-        $('#username').text(item.id);
+        str = item.id;
+        str = str.split('-');
+        name = str[0];
+        id = str[1];
+        $('#username').text(name);
+        $('#userid').text(id);
     }
 
     function name2id(value)
