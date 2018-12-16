@@ -65,7 +65,7 @@
                 <div v-for='item in memberList'>
                     <div v-bind:id='item.name' class='square' data-toggle="modal" data-target="#delMemModal" onclick="alertDelMemModal(this)" src='./image/projectDetail/add.png'>
                         <div style='position:relative;top:20%;'><img src='./image/projectDetail/member.png' alt='member' /></div>
-                        <div style='position:relative;top:30%;'>{{item.name}}</div>
+                        <div style='position:relative;top:30%;'>{{item.userName}}</div>
                     </div>
                 </div>
                 <div class='square' style='border-style: dashed;'>
@@ -295,9 +295,11 @@
                         alert('Err: '+res.data.message);
                     })
                     //memberList
-                    // this.$http.get(URL+'/projects').then(function(res){
-                    //     this.project = res.data;
-                    // })
+                    this.$http.get(URL+'/'+projectId.toString()+'/users').then(function(res){
+                        this.memberList = res.data.data;
+                    },function(res){
+                        alert('Err: '+res.data.message);
+                    })
                 },
                 getId:function(index){
                     return 'task'+index.toString();
