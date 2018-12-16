@@ -295,7 +295,7 @@
                         alert('Err: '+res.data.message);
                     })
                     //memberList
-                    this.$http.get(URL+'/'+projectId.toString()+'/users').then(function(res){
+                    this.$http.get(URL+'/projects/'+projectId.toString()+'/users').then(function(res){
                         this.memberList = res.data.data;
                     },function(res){
                         alert('Err: '+res.data.message);
