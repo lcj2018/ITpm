@@ -100,7 +100,7 @@
             <br>
             <div class="row">
                 <div class='m-auto'>
-                <button type="button" class='btn btn-success'>提交任务</button>    
+                <button type="button" class='btn btn-success' data-toggle='modal' data-target="#submit">提交任务</button>    
                 </div>
             </div>
             <br>
@@ -144,7 +144,24 @@
         </div>
     </div>
 </div>
+<div class='modal fade' id='submit'>
+    <div class='modal-dialog'>
+        <div class='modal-content'>
+            <div class="modal-header">
+                    <h4 class="modal-title" id='delMemModal'>提交任务</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            </div>
+            <div class='modal-body'>
+                <p>&nbsp;&nbsp;&nbsp;是否确认提交</p>
+            </div>
+            <div class='modal-footer'>
+                <button type="button" class="btn btn-danger" onclick='submitMission()'>确认</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
+            </div>
+        </div>
+    </div>
 
+</div>
 <div class="modal fade" id="addMemModal">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -255,6 +272,28 @@
         $('#userSelector').val(str);
     }
     function submitMission(){
+        let send = {
+                finished:1 
+            };
+        $.ajax({
+            method:'PUT',
+            contentType:"application/json",
+            url:URL+"/missions/"+missionId.toString(),
+            data:JSON.stringify(send),
+            dataType:"json",
+            beforeSend:function(res){
+                res.setRequestHeader("Authorization",Token);
+
+            },
+            success:function(res){
+                alert("Suceess!");
+            },
+            error:function(res){
+                alert(res.message);
+            }
+        })
+
+
 
     }
     function delMem(str)
