@@ -63,7 +63,7 @@
             </div>
             <div class='row'>
                 <div v-for='item in memberList'>
-                    <div v-bind:id='item.name' class='square' data-toggle="modal" data-target="#delMemModal" onclick="alertDelMemModal(this)" src='./image/projectDetail/add.png'>
+                    <div v-bind:id='item.userName' class='square' data-toggle="modal" data-target="#delMemModal" onclick="alertDelMemModal(this)" src='./image/projectDetail/add.png'>
                         <div style='position:relative;top:20%;'><img src='./image/projectDetail/member.png' alt='member' /></div>
                         <div style='position:relative;top:30%;'>{{item.userName}}</div>
                     </div>
@@ -237,8 +237,13 @@
                 </div>
                 <div class='row' style='text-align: center;'>
                     <div class='col'>
-                        <label for='username'><strong>用户名：</strong></label>
-                        <section id='username'></section>
+                        <div class='row' style='display:inline-flex'>
+                            <label for='username'><strong>用户名：</strong></label>
+                            <section id='username'></section>
+                        </div>
+                        <div class='row' style='display:inline-flex'>
+                            <label for='id'><strong>id：</strong></label>
+                            <section id='userid'></section>
                     </div>
                 </div>
             </div>
@@ -297,7 +302,6 @@
                     //memberList
                     this.$http.get(URL+'/projects/'+projectId.toString()+'/users').then(function(res){
                         this.memberList = res.data.data;
-                        alert(JSON.stringify(this.memberList));
                     },function(res){
                         alert('Err: '+res.data.message);
                     })
@@ -390,13 +394,14 @@
         name = $('#userSelector').val();
         list = []
         list.push(name);
+        let user={
+            users: list
+        }
 
         $.ajax({
             method: "POST",
             url: URL+"/projects/"+projectId.toString()+'/users',
-            data: {
-                uid: list
-            },
+            data: JSON.stringify(user),
             dataType: "json",
             contentType: "application/json",
             beforeSend: function(res){
@@ -406,7 +411,7 @@
                 alert('Success!');
             },
             error: function(res){
-                alert(res.data.message);
+                alert(res.message);
             }
         })    
     }
