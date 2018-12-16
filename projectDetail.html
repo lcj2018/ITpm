@@ -297,6 +297,7 @@
                     //memberList
                     this.$http.get(URL+'/projects/'+projectId.toString()+'/users').then(function(res){
                         this.memberList = res.data.data;
+                        alert(JSON.stringify(this.memberList));
                     },function(res){
                         alert('Err: '+res.data.message);
                     })
@@ -386,15 +387,28 @@
     }
 
     function addMem(){
-        name=$('#userSelector');
-        $.post('./test/addMem.php',{username: name},function(res){
-            if(res.status=='ok')
-            {
+        name = $('#userSelector').val();
+        list = []
+        list.push(name);
+
+        $.ajax({
+            method: "POST",
+            url: URL+"/projects/"+projectId.toString()+'/users',
+            data: {
+                uid: list
+            },
+            dataType: "json",
+            contentType: "application/json",
+            beforeSend: function(res){
+                res.setRequestHeader("Authorization",Token);
+            },
+            success: function(res){
                 alert('Success!');
-            } else {
-                alert('Err: '+res.msg);
+            },
+            error: function(res){
+                alert(res.data.message);
             }
-        },"json")
+        })    
     }
 
     function alertDelMemModal(item)
