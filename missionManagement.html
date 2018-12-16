@@ -1,22 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="utf-8">
-    <title>任务管理</title>
-    <meta http-equiv="content-type" content="text/html" charset="utf-8" />
-    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
-    <link type="text/css" rel="stylesheet" href="./css/style.css" />
-    <link type="text/css" rel="stylesheet" href="./css/folderManagement.css" />
-    <script type="text/javascript" src="https://cdn.staticfile.org/vue/2.2.2/vue.min.js"></script>
-    <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.1.0/css/bootstrap.min.css">
-    <script src="https://cdn.staticfile.org/jquery/3.2.1/jquery.min.js"></script>
-    <script src="https://cdn.staticfile.org/popper.js/1.12.5/umd/popper.min.js"></script>
-    <script src="https://cdn.staticfile.org/twitter-bootstrap/4.1.0/js/bootstrap.min.js"></script>
-    <script src="https://cdn.staticfile.org/vue-resource/1.5.1/vue-resource.min.js"></script>
-    <script src="https://unpkg.com/vuejs-datepicker"></script>
+        <meta charset="utf-8">
+        <title>任务管理</title>
+        <meta http-equiv="content-type" content="text/html" charset="utf-8" />
+        <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+        <link type="text/css" rel="stylesheet" href="./css/style.css" />
+        <link type="text/css" rel="stylesheet" href="./css/projectDetail.css" />
+        <script type="text/javascript" src="https://cdn.staticfile.org/vue/2.2.2/vue.min.js"></script>
+        <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.1.0/css/bootstrap.min.css">
+        <script src="./js/http.js"></script>
+        <script src="https://cdn.staticfile.org/jquery/3.2.1/jquery.min.js"></script>
+        <script src="https://cdn.staticfile.org/popper.js/1.12.5/umd/popper.min.js"></script>
+        <script src="https://cdn.staticfile.org/twitter-bootstrap/4.1.0/js/bootstrap.min.js"></script>
+        <script src="https://cdn.staticfile.org/vue-resource/1.5.1/vue-resource.min.js"></script>
+        <script src="https://unpkg.com/vuejs-datepicker"></script>
 </head>
 <body>
-  
     <div class='container-fluid'>
         <div class='row page-title'>
             <div class='col pt-left'>
@@ -45,7 +45,7 @@
                 <div class='col-lg-2' style='background-color:#8999FB;'></div>
                 <div class='col-lg-10' style="background-color:#BFCDFB; font-size: 2rem; color: #777;">
                     <a href="./projectDetail.html" style='color:white; text-decoration:none;'>
-                    <p class='text-right'>项目管理大作业</p>
+                    <p class='text-right'>{{projectname}}</p>
                     </a>
                 </div>
             </div>
@@ -56,21 +56,25 @@
             <div class='row'>
                 <h2 style="color:grey">&nbsp&nbsp&nbsp&nbsp任务负责人</h2>
             </div>
+           
             <div class='row'>
                     <div class='square'>
                         <div style='position:relative;top:20%;'><img src='./image/projectDetail/member.png' alt='member' /></div>
-                        <div style='position:relative;top:30%;'>{{mission.leader.name}}</div>
+                        <div style='position:relative;top:30%;'>{{memberlist[0].userName}}</div>
                     </div>
             </div>
             <br>
+        
             <div class='row'>
-                    <h2 style="color:grey">&nbsp&nbsp&nbsp&nbsp任务成员</h2>
+                    <h2 style="color:grey">&nbsp;&nbsp;&nbsp;&nbsp;任务成员</h2>
             </div>
             <div class='row'>
-                    <div v-for='item in mission.members'>
+                    <div v-for='item in memberlist'>
+                        <div v-if='item.id!=mission.uid'>
                         <div class='square' data-toggle="modal" data-target="#delMemModal" onclick="alertDelMemModal('item')" src='./image/projectDetail/add.png'>
                             <div style='position:relative;top:20%;'><img src='./image/projectDetail/member.png' alt='member' /></div>
-                            <div style='position:relative;top:30%;'>{{item.name}}</div>
+                            <div style='position:relative;top:30%;'>{{item.userName}}</div>
+                        </div>
                         </div>
                     </div>
                     <div class='square' style='border-style: dashed;'>
@@ -79,19 +83,19 @@
             </div>
             <br>
             <div class='row'>
-                    <h2 style="color:grey">&nbsp&nbsp&nbsp&nbsp任务描述</h2>
+                    <h2 style="color:grey">&nbsp;&nbsp;&nbsp;&nbsp;任务描述</h2>
             </div>
             <br>
             <div class="row">
-                <p>{{mission.describe}}</p>
+                <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{mission.details}}</p>
             </div>
             <br>
             <div class="row">
-                <h2 style="color:grey">&nbsp&nbsp&nbsp&nbsp截止时间</h2>
+                <h2 style="color:grey">&nbsp;&nbsp;&nbsp;&nbsp;截止时间</h2>
             </div>
             <br>
             <div class="row">
-                <p>{{mission.deadline}}</p>    
+                <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{mission.endTime}}</p>    
             </div>
             <br>
             <div class="row">
@@ -180,34 +184,58 @@
 
 
 <script>
+    var Token = getCookie("itpm-token");
+    var userName = getCookie("itpm-userName");
+    var userId = getCookie('itpm-userId');
+    var groupId = getCookie('itpm-groupId');
+    var projectId = getCookie('itpm-projectId');
+    var URL = 'http://110.64.91.112:8081/api';
+    var missionId=getCookie('missionId');
+    var URL='http://110.64.91.112:8081/api';
+    Vue.http.headers.common['Authorization']=Token;
     var vm = new Vue({
         el: '#user',
         data: {
-            username: 'dadagum'
+            username: userName
         }
     })
     $(document).ready(function() {
         //$('#wrapper').css('height',screen.availHeight.toString());
-        getMission(123);
+        getMission(missionId);
     })
-    function getMission(missionid){
+    function getMission(missionId){
         var vm1= new Vue({
             el:"#vueMission",
             data:{
-                mission:""
+                mission:"",
+                memberlist:'',
+                projectname:''
+            
             },
             methods:{
                 post:function(){
-                    this.$http.post('http://110.64.91.103/ITpm/test/getMission.php',{missionid: missionid},{emulateJson:true}).then(function(res){
-                        this.mission=res.body.mission;
-                        alertMem(this.mission.members);
-
+                    this.$http.get(URL+'/missions/'+missionId.toString()).then(function(res){
+                        this.mission=res.data.data;
                     },function(res){
-                        console.log(res.status);
-
+                        alert('Err:'+res.data.message);
                     })
-                }
+                    this.$http.get(URL+'/missions/'+missionId.toString()+'/users').then(function(res){
+                        this.memberlist=res.data.data;
+                    },function(res){
+                        alert('Err:'+res.data.message);
+                    })
+                    this.$http.get(URL+'/projects/'+projectId.toString()).then(function(res){
+                        this.projectname=res.data.data.name;
+                    },function(res){
+                        alert('Err:'+res.data.message);
+                    })
+                },
+                getId:function(index){
+                    return 'task'+index.toString();
+                }  
+            
             },
+
             components:{
                 vuejsDatepicker
             }
