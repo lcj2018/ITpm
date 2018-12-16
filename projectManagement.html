@@ -124,7 +124,7 @@
                     this.$http.get('http://110.64.91.112:8081/api/projects').then(function(res){
                         projects = res.data.data;
                         for(var i=0;i<projects.length;++i)
-                            if(projects[i].gid==groupId)this.projectList+=[projects[i]];
+                            if(projects[i].gid==groupId)this.projectList.push(projects[i]);
                     },function(res){
                         alert('Err:'+res.data.message);
                     })
@@ -142,7 +142,8 @@
 
     function jumpTo(res){
         id = res.id.substr(7);
-        window.location.href = 'projectDetail.html?projectId=' + id;
+        setCookie('itpm-projectId',id);
+        window.location.href = 'projectDetail.html';
     }
 
     function addNewProject(){
