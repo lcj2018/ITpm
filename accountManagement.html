@@ -7,9 +7,10 @@
         <meta http-equiv="content-type" content="text/html" charset="utf-8" />
         <meta name="viewport" content="width=device-width,initial-scale=1.0" />
         <link type="text/css" rel="stylesheet" href="css/style.css" />
-        <link type="text/css" rel="stylesheet" href="css/accountManagement.css" />
+        <link type="text/css" rel="stylesheet" href="css/teamManagement.css" />
         <script type="text/javascript" src="https://cdn.staticfile.org/vue/2.2.2/vue.min.js"></script>
         <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.1.0/css/bootstrap.min.css">
+        <script src='./js/http.js'></script>
         <script src="https://cdn.staticfile.org/jquery/3.2.1/jquery.min.js"></script>
         <script src="https://cdn.staticfile.org/popper.js/1.12.5/umd/popper.min.js"></script>
         <script src="https://cdn.staticfile.org/twitter-bootstrap/4.1.0/js/bootstrap.min.js"></script>
@@ -23,7 +24,7 @@
             <p class='pt-left'>项目开发管理系统</p>
         </div>
         <div class='col'>
-            <p id='user' class='pt-right'>{{username}}&nbsp;&nbsp;<a href='#'>退出</a></p>
+            <p id='user' class='pt-right'>{{username}}&nbsp;&nbsp;<a href='login.html'>退出</a></p>
         </div>
     </div>
 </div>
@@ -42,7 +43,7 @@
             <!-- 成员 -->
             <br/>
             <div class='row'>
-                <div v-for='item in project.members'>
+                <div v-for='(item,index) in project'>
                     <div v-bind:id='item.name' class='square' data-toggle="modal" data-target="#MemModal" onclick="alertMem(this)">
                         <div style='position:relative;top:20%;'><img src='./image/userManagement/member.png' alt='member' /></div>
                         <div style='position:relative;top:30%;'>{{item.name}}</div>
@@ -98,6 +99,8 @@
 </div>
 </body>
 <script>
+    var userName = getCookie('itpm-userName');
+
     $(document).ready(function() {
         $('#wrapper').css('height',screen.availHeight.toString());
         getUser(123);
@@ -106,14 +109,14 @@
 	var usr = new Vue({
 		el: '#user',
 		data: {
-			username: 'dadagum',
+			username: userName,
 		},
 	})
 	
 	var mm = new Vue({
 		el: '#level',
 		data: {
-			lev: 'admin',
+			lev: 'noadmin',
 		},
 	})
 
@@ -121,15 +124,16 @@
         var p = new Vue ({
             el: '#vueAccount',
             data: {
-                project: '',
+                project: []
             },
             methods:{
                 post:function(){
-                    this.$http.post('http://110.64.91.103/itpm/test/getAccountList.php',{projectId: projectId},{emulateJSON: true}).then(function(res){
-                        this.project = res.body;
-                    },function(res){
-                        console.log(res.status);
-                    })
+                    // this.$http.post('http://110.64.91.103/itpm/test/getAccountList.php',{projectId: projectId},{emulateJSON: true}).then(function(res){
+                    //     this.project = res.body;
+                    // },function(res){
+                    //     console.log(res.status);
+                    // })
+                    this.project.push({name: userName});
                 }
             },
             components: {
