@@ -24,7 +24,7 @@
             <p class='pt-left'>项目开发管理系统</p>
         </div>
         <div class='col'>
-            <p id='user' class='pt-right'>{{username}}&nbsp;&nbsp;<a href='#'>退出</a></p>
+            <p id='user' class='pt-right'>{{username}}&nbsp;&nbsp;<a href='login.html'>退出</a></p>
         </div>
     </div>
 </div>
@@ -47,7 +47,7 @@
             </div>
             <div class='row'>
                 <div v-for='item in missionList'>
-                    <div v-bind:id='getId(item.taskId)' class='square' onclick='jumpTo(this)'>
+                    <div v-bind:id='getId(item.id)' class='square' onclick='jumpTo(this)'>
                         <div style='position:relative;top:20%;'><img src='./image/projectDetail/task.png' alt='task' /></div>
                         <div style='position:relative;top:40%;'>{{item.name}}</div>
                     </div>
@@ -257,7 +257,9 @@
     var Token = getCookie("itpm-token");
     var userName = getCookie("itpm-userName");
     var userId = getCookie('itpm-userId');
-    var projectId = getPar('projectId');
+    var groupId = getCookie('itpm-groupId');
+    var projectId = getCookie('itpm-projectId');
+    var URL = 'http://110.64.91.112:8081/api';
     Vue.http.headers.common['Authorization'] = Token;
     
     var usr = new Vue({
@@ -281,22 +283,21 @@
                 memberList: []
             },
             methods:{
-                post:function(){
-                    //project
-                    this.$http.get('http://119.23.76.43/api/projects'+projectId.toString()).then(function(res){
-                        this.project = res.data;
-                    })
+                init:function(){
+                    //project removed
+                    // this.$http.get(URL+'/projects/'+projectId.toString()).then(function(res){
+                    //     this.project = res.data.data;
+                    // })
                     //missionList
-                    this.$http.post('./test/getProject.php',{projectId: projectId},{emulateJSON: true}).then(function(res){//List
-                        this.missionList = res.data;
-                        alertMem(this.project.members);
+                    this.$http.get(URL+'/missions',{params:{uid: userId,gid: groupId,pid: projectId}}).then(function(res){//List
+                        this.missionList = res.data.data;
                     },function(res){
-                        console.log(res.status);
+                        alert('Err: '+res.data.message);
                     })
                     //memberList
-                    this.$http.get('http://119.23.76.43/api/projects').then(function(res){
-                        this.project = res.data;
-                    })
+                    // this.$http.get(URL+'/projects').then(function(res){
+                    //     this.project = res.data;
+                    // })
                 },
                 getId:function(index){
                     return 'task'+index.toString();
@@ -306,7 +307,7 @@
                 vuejsDatepicker
             }
         })
-        p.post();
+        p.init();
     }
 
     function alertMem(t){
@@ -325,17 +326,19 @@
     }
 
     function addNewTask(){
-        name=normalizeDate($('taskName').val());
+        name=$('#taskName').val();
         startDate=normalizeDate($('#startDate').val());
-        endDate=$('#endDate').val();
+        endDate=normalizeDate($('#endDate').val());
         respsename=$('#respseName').val();
         description=$('#taskDescription').val();
 
         $.ajax({
             method: "POST",
-            url: "http://119.23.76.43/api//missions",
+            url: URL+"/missions",
             data: {
+                gid: groupId,
                 pid: projectId,
+                uid: userId,
                 name: name,
                 details: description,
                 startTime: startDate,
@@ -365,15 +368,15 @@
     }
 
     function addMem(){
-        // name=$('#userSelector');
-        // $.post('./test/addMem.php',{username: name},function(res){
-        //     if(res.status=='ok')
-        //     {
-        //         alert('Success!');
-        //     } else {
-        //         alert('Err: '+res.msg);
-        //     }
-        // },"json")
+        name=$('#userSelector');
+        $.post('./test/addMem.php',{username: name},function(res){
+            if(res.status=='ok')
+            {
+                alert('Success!');
+            } else {
+                alert('Err: '+res.msg);
+            }
+        },"json")
     }
 
     function alertDelMemModal(item)
@@ -388,7 +391,8 @@
 
     function jumpTo(res){
         id = res.id.substr(4);
-        window.location.href = 'missionManagement.html?groupId=' + id;
+        setCookie('missionId',id);
+        window.location.href = 'missionManagement.html';
     }
 </script>
 </html>
