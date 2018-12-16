@@ -100,7 +100,7 @@
                             <div class='row'>
                                 <div v-bind:id="getId('showMem',index)" class='collapse container' style='font-size:1.5rem;'>
                                     <div v-for="member in teamMems[index]">
-                                        <div class="modal fade" id="delMemModal">
+                                        <div class="modal fade" v-bind:id="get3Id('delMemModal',item.id,member.id)">
                                             <div class="modal-dialog">
                                                 <div class="modal-content">
                                             
@@ -133,7 +133,7 @@
                                                             </div>
                                                             <div class='col'>{{member.phone}}</div>
                                                             <div class='col' style='text-align: right;'>
-                                                                <img v-if='item.uid==userId' id='delMem' data-toggle="modal" data-target="#delMemModal" src='./image/teamManagement/del.png' alt='delMem' style='height:2rem;width:2rem;'/>
+                                                                <img v-if='item.uid==userId' id='delMem' data-toggle="modal" v-bind:data-target="get3Id('#delMemModal',item.id,member.id)" src='./image/teamManagement/del.png' alt='delMem' style='height:2rem;width:2rem;'/>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -236,6 +236,9 @@
                 getId:function(str,index){
                     return str+index.toString();
                 },
+                get3Id:function(str,index,indexx){
+                    return str+index.toString()+'-'+indexx.toString();
+                },
                 delTeam:function(team){
                     this.$http.delete(URL+'/groups/'+team.id.toString(),{enlateJSON: true}).then(function(res){
                         alert('Success!');
@@ -244,7 +247,9 @@
                     })
                 },
                 delMem:function(team,member){
-                    this.$http.post(URL+'/groups/'+team.id.toString()+'/users/'+member.id.toString(),{enlateJSON: true}).then(function(res){
+                    alert('team:'+team.id);
+                    alert('member:'+member.id);
+                    this.$http.delete(URL+'/groups/'+team.id.toString()+'/users/'+member.id.toString(),{enlateJSON: true}).then(function(res){
                         alert('Success!');
                     },function(res){
                         alert('Err:' + res.status);
@@ -298,8 +303,8 @@
     function addNewMem(item){
         id = item.id.substr(9);
         name = $('#addedUsername'+id).val();
-        alert(id);
-        alert(name);
+        alert('group:'+id);
+        alert('member:'+name);
 
         $.ajax({
             method: "POST",
