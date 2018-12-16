@@ -308,14 +308,31 @@
             }
         })
         p.init();
+        alertMem();
     }
 
-    function alertMem(t){
-        len = t.length;
-        for(i=0;i<len;++i)
-        {
-            $('#memList').append("<li onclick=\"setUserSelector('"+t[i].name.toString()+"')\">"+t[i].name.toString()+'</li>');
-        }
+    function alertMem(){
+        var t=[];
+        $.ajax({
+            method: "GET",
+            url: URL+'/groups/'+groupId.toString()+'/users',
+            dataType: "json",
+            beforeSend: function(res){
+                res.setRequestHeader("Authorization",Token);
+            },
+            success: function(res){
+                t = res.data;
+                alert(res.data);
+                len = t.length;
+                for(i=0;i<len;++i)
+                {
+                    $('#memList').append("<li onclick=\"setUserSelector('"+t[i].id.toString()+"')\">"+t[i].name.toString()+'</li>');
+                }
+            },
+            error: function(res){
+                alert(res.message);
+            }
+        })
     }
 
     function submitDiss(){
