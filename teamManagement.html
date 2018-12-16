@@ -99,46 +99,50 @@
                             </div>
                             <div class='row'>
                                 <div v-bind:id="getId('showMem',index)" class='collapse container' style='font-size:1.5rem;'>
-                                    <div v-for="member in teamMems[index]">
-                                        <div class="modal fade" v-bind:id="get3Id('delMemModal',item.id,member.id)">
-                                            <div class="modal-dialog">
-                                                <div class="modal-content">
-                                            
-                                                    <div class="modal-header">
-                                                        <h4 class="modal-title">移除成员</h4>
-                                                        <button type="button" class="close" data-dismiss="modal">&times;</button>
-                                                    </div>
-                                                
-                                                    <div class="modal-body" style='text-align: center;'>
-                                                        <p style='font-size:1.2rem;'>是否移除该成员？</p>
-                                                    </div>
-                                                
-                                                    <div class="modal-footer">
-                                                        <button type="button" class='btn btn-danger' @click="delMem(item,member)">确定</button>
-                                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
-                                                    </div>
-                                            
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class='row'>
-                                            <div class='col'>
-                                                <div class='teambox'>
-                                                    <div class='container'>
-                                                        <div class='row'>
-                                                            <div class='col'>
-                                                                <div v-if='item.uid==member.id' style='height:2rem;width:2rem;border-radius:100%;background-color:#f05654;float:left;'></div>
-                                                                <div v-else style='height:2rem;width:2rem;border-radius:100%;background-color:#ffc64b;float:left;'></div>
-                                                                {{member.userName}}
+                                    <div v-for="(p,pop) in pos">
+                                        <div v-if="p==index">
+                                            <div v-for="member in teamMems[pop]">
+                                                <div class="modal fade" v-bind:id="get3Id('delMemModal',item.id,member.id)">
+                                                    <div class="modal-dialog">
+                                                        <div class="modal-content">
+                                                    
+                                                            <div class="modal-header">
+                                                                <h4 class="modal-title">移除成员</h4>
+                                                                <button type="button" class="close" data-dismiss="modal">&times;</button>
                                                             </div>
-                                                            <div class='col'>{{member.phone}}</div>
-                                                            <div class='col' style='text-align: right;'>
-                                                                <img v-if='item.uid==userId' id='delMem' data-toggle="modal" v-bind:data-target="get3Id('#delMemModal',item.id,member.id)" src='./image/teamManagement/del.png' alt='delMem' style='height:2rem;width:2rem;'/>
+                                                        
+                                                            <div class="modal-body" style='text-align: center;'>
+                                                                <p style='font-size:1.2rem;'>是否移除该成员？</p>
                                                             </div>
+                                                        
+                                                            <div class="modal-footer">
+                                                                <button type="button" class='btn btn-danger' @click="delMem(item,member)">确定</button>
+                                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
+                                                            </div>
+                                                    
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <br/>
+                                                <div class='row'>
+                                                    <div class='col'>
+                                                        <div class='teambox'>
+                                                            <div class='container'>
+                                                                <div class='row'>
+                                                                    <div class='col'>
+                                                                        <div v-if='item.uid==member.id' style='height:2rem;width:2rem;border-radius:100%;background-color:#f05654;float:left;'></div>
+                                                                        <div v-else style='height:2rem;width:2rem;border-radius:100%;background-color:#ffc64b;float:left;'></div>
+                                                                        {{member.userName}}
+                                                                    </div>
+                                                                    <div class='col'>{{member.phone}}</div>
+                                                                    <div class='col' style='text-align: right;'>
+                                                                        <img v-if='item.uid==userId' id='delMem' data-toggle="modal" v-bind:data-target="get3Id('#delMemModal',item.id,member.id)" src='./image/teamManagement/del.png' alt='delMem' style='height:2rem;width:2rem;'/>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <br/>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -215,22 +219,24 @@
             el: '#vueTeamList',
             data: {
                 teamList: [],
-                teamMems: []
+                teamMems: [],
+                pos: []
             },
             methods:{
                 init:function(){
                     this.$http.get('http://110.64.91.112:8081/api/groups').then(function(res){
                         this.teamList = res.data.data;
-                        for(var i=0;i<this.teamList.length;++i)
-                        {
-                            this.$http.get('http://110.64.91.112:8081/api/groups/'+this.teamList[i].id.toString()+'/users').then(function(res){
-                                this.teamMems.push(res.data.data);
-                            },function(res){
-                                alert('Err:'+res.data.message);
-                            })
-                        }
+                        for(var i=0;i<this.teamList.length;++i)this.getMem(i);
                     },function(res){
-                        console.log(res.status);
+                        alert(res.data.message);
+                    })
+                },
+                getMem:function(i){
+                    this.$http.get('http://110.64.91.112:8081/api/groups/'+this.teamList[i].id.toString()+'/users').then(function(res){
+                        this.teamMems.push(res.data.data);
+                        this.pos.push(i);
+                    },function(res){
+                        alert('Err:'+res.data.message);
                     })
                 },
                 getId:function(str,index){
@@ -247,8 +253,6 @@
                     })
                 },
                 delMem:function(team,member){
-                    alert('team:'+team.id);
-                    alert('member:'+member.id);
                     this.$http.delete(URL+'/groups/'+team.id.toString()+'/users/'+member.id.toString(),{enlateJSON: true}).then(function(res){
                         alert('Success!');
                     },function(res){
@@ -303,8 +307,6 @@
     function addNewMem(item){
         id = item.id.substr(9);
         name = $('#addedUsername'+id).val();
-        alert('group:'+id);
-        alert('member:'+name);
 
         $.ajax({
             method: "POST",
