@@ -322,11 +322,10 @@
             },
             success: function(res){
                 t = res.data;
-                alert(res.data);
                 len = t.length;
                 for(i=0;i<len;++i)
                 {
-                    $('#memList').append("<li onclick=\"setUserSelector('"+t[i].id.toString()+"')\">"+t[i].name.toString()+'</li>');
+                    $('#memList').append("<li onclick=\"setUserSelector('"+t[i].id.toString()+"')\">"+t[i].userName.toString()+'</li>');
                 }
             },
             error: function(res){
