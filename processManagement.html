@@ -1,19 +1,20 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="utf-8">
-    <title>进度管理</title>
-    <meta http-equiv="content-type" content="text/html" charset="utf-8" />
-    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
-    <link type="text/css" rel="stylesheet" href="./css/style.css" />
-    <link type="text/css" rel="stylesheet" href="./css/folderManagement.css" />
-    <script type="text/javascript" src="https://cdn.staticfile.org/vue/2.2.2/vue.min.js"></script>
-    <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.1.0/css/bootstrap.min.css">
-    <script src="https://cdn.staticfile.org/jquery/3.2.1/jquery.min.js"></script>
-    <script src="https://cdn.staticfile.org/popper.js/1.12.5/umd/popper.min.js"></script>
-    <script src="https://cdn.staticfile.org/twitter-bootstrap/4.1.0/js/bootstrap.min.js"></script>
-    <script src="https://cdn.staticfile.org/vue-resource/1.5.1/vue-resource.min.js"></script>
-    <script src="https://unpkg.com/vuejs-datepicker"></script>
+        <meta charset="utf-8">
+        <title>进度管理</title>
+        <meta http-equiv="content-type" content="text/html" charset="utf-8" />
+        <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+        <link type="text/css" rel="stylesheet" href="./css/style.css" />
+        <link type="text/css" rel="stylesheet" href="./css/projectDetail.css" />
+        <script type="text/javascript" src="https://cdn.staticfile.org/vue/2.2.2/vue.min.js"></script>
+        <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.1.0/css/bootstrap.min.css">
+        <script src="./js/http.js"></script>
+        <script src="https://cdn.staticfile.org/jquery/3.2.1/jquery.min.js"></script>
+        <script src="https://cdn.staticfile.org/popper.js/1.12.5/umd/popper.min.js"></script>
+        <script src="https://cdn.staticfile.org/twitter-bootstrap/4.1.0/js/bootstrap.min.js"></script>
+        <script src="https://cdn.staticfile.org/vue-resource/1.5.1/vue-resource.min.js"></script>
+        <script src="https://unpkg.com/vuejs-datepicker"></script>
 </head>
 <body>
    <div class='container-fluid'>
@@ -37,41 +38,141 @@
                 <div class='col'></div>
         </div>
         <div class='row'>
-            <div id='vuePorcess' class='container box'>
+            <div id='vueProcess' class='container box'>
                 <div class='row'>
                     <div class='col-lg-4' style='background-color: #8999FB '>
                             <a href="./projectDetail.html" style='color:white; text-decoration:none;'>
-                                <p class='text-right'>返回上一层</p>
+                                <p style='font-size:2rem;'>&lt;&lt;返回上一层</p>
                             </a>
 
                     </div>
                     <div class='col-lg-8' style='background-color:#8999FB;'></div>  
                 </div>
                 <div class='row'>
-                    <div class="btn-group" data-toggle="buttons-radio">
-                                <button class="btn btn-primary">Left</button>
-                                <button class="btn btn-primary">Middle</button>
-                                <button class="btn btn-primary">Right</button>             
-                    </div>  
-            
-                       
-
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-outline-light text-dark btn-lg"@click='choice=0'>所有任务</button>
+                        <p style="font-size:2rem;">|</p>
+                        <button type="button" class="btn btn-outline-light text-dark btn-lg"@click='choice=1'>已完成任务</button>
+                        <p style="font-size:2rem;">|</p>
+                        <button type="button" class="btn btn-outline-light text-dark btn-lg"@click='choice=2'>未完成任务</button>
+                        <p style="font-size:2rem;">|</p>
+                        <button type="button" class="btn btn-outline-light text-dark btn-lg"@click='choice=3'>过期任务</button>
                     </div>
                 </div>
-                
-            </div>
+                <div class='row'>
+                    <div class='col-lg-2'></div>
+                    <div class='col-lg-8'>
+                <table class="table table-striped table-bordered">
+                    <thead>
+                        <tr>
+                            <th>任务名称</th>
+                            <th>结束时间</th>
+                            <th>状态</th>
+                        </tr>
+                    </thead>
+                    <tbody v-for='item in filter(choice)'>
+                        <tr v-bind:id='item.name'>
+                      
+                            <th>{{item.name}}</th>
+                            <th>{{item.endTime}}</th>
+                            <div>
+                            <th v-if='item.finished==1'>已完成</th>
+                            <th v-else-if='item.finished==0&&item.overdued==0'>未完成</th>
+                            <th v-else>过期</th>
+                            </div>
+                      
+                      
+                        
 
+
+                            
+                        </tr>
+                    </tbody>
+                </table>
+                    </div>
+                    <div class='col-lg-2'></div>
+                </div>
+            </div>
+                
         </div>
 
     </div>
+
+   
 </body>
 <script>
-    function getMissionList(){
+    var Token = getCookie("itpm-token");
+    var userName = getCookie("itpm-userName");
+    var userId = getCookie('itpm-userId');
+    var groupId = getCookie('itpm-groupId');
+    var projectId = getCookie('itpm-projectId');
+    var URL = 'http://110.64.91.112:8081/api';
+    Vue.http.headers.common['Authorization'] = Token;
+    var usr = new Vue({
+        el: '#user',
+        data: {
+            username: userName
+        }
+    })
+    $(document).ready(function() {
+        $('#wrapper').css('height',screen.availHeight.toString());
+        getMissionList(projectId);
+    })
+    function getMissionList(projectId){
+        var p=new Vue({
+            el:'#vueProcess',
+            data:{
+                missionlist:'',
+                showmission:'',
+                choice:0
+
+            },
+            methods:{
+                init:function(){
+                    this.$http.get(URL+'/missions',{params:{uid: userId,gid: groupId,pid: projectId}}).then(function(res){//List
+                        this.showmission = res.data.data;
+                    },function(res){
+                        alert('Err: '+res.data.message);
+                    })
+                },
+                filter:function(choice){
+                    var showmission=this.showmission;
+                    if (choice==0)
+                    {
+                     return showmission.filter(function(item){
+                        return item.id>0
+                    })
+                    }
+                    if (choice==1)
+                    {
+                        return showmission.filter(function(item){
+                        return item.finished==1
+                    })
+                    }
+                    if (choice==2)
+                    {
+                        return showmission.filter(function(item){
+                        return item.finished==0&&item.overdued==0
+                    })
+                    }
+                    if (choice==3)
+                    {
+                        return showmission.filter(function(item){
+                        return item.overduded==1
+                    })
+                    }
+                    
+                    
+                }
+
+                
+            }
+        })
+        p.init();
+    
 
 
     }
-    function filter(choice)
-    {
-        
-    }
+  
+
 </script>
