@@ -91,13 +91,21 @@
                         alert('密码为空！');
                         return;
                 }
-                $.post(URL+"/authentication",{userName: username, password: password}).then(function(res,status,xhr){
-                        setCookie('itpm-userId',res.data.id);
-                        setCookie('itpm-userName',res.data.userName);
-                        setCookie('itpm-token',xhr.getResponseHeader('Authorization'));
-                        window.location.href='./teamManagement.html';
-                },"json").error(function(res){
-                        $('#warning').append("<div class='alert alert-danger'><a href='#' class='close' data-dismiss='alert'>&times;</a>"+res.message+"</div>");
+                
+                $.ajax({
+                        url: URL+"/authentication",
+                        method: "POST",
+                        data: { userName: username, password: password },
+                        dataType: "json",
+                        success: function (res) {
+                                setCookie('itpm-userId',res.data.id);
+                                setCookie('itpm-userName',res.data.userName);
+                                setCookie('itpm-token',xhr.getResponseHeader('Authorization'));
+                                window.location.href='./teamManagement.html';
+                        },
+                        error: function(res) {
+                                $('#warning').append("<div class='alert alert-danger'><a href='#' class='close' data-dismiss='alert'>&times;</a>"+res.responseJSON.message+"</div>");                                
+                        }
                 });
         }
 </script>
