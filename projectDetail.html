@@ -127,8 +127,8 @@
                                 <vuejs-datepicker id='startDate' placeholder='choose start date'></vuejs-datepicker>
                                 <label for='endDate'>结束日期：</label>
                                 <vuejs-datepicker id='endDate' placeholder='choose end date'></vuejs-datepicker><br/>
-                                <label for="respseName">任务负责人:</label>
-                                <input id='respName' type="text" class="form-control" style='width:50%;display:inline;' placeholder="respName" /><br/>
+                                <!-- <label for="respseName">任务负责人:</label>
+                                <input id='respName' type="text" class="form-control" style='width:50%;display:inline;' placeholder="respName" /><br/> -->
                                 <label for='taskDescription'>任务详情：</label><br/>
                                 <textarea id='taskDescription' rows='5' cols='45'></textarea>
                             </div>
@@ -275,7 +275,7 @@
     var userId = getCookie('itpm-userId');
     var groupId = getCookie('itpm-groupId');
     var projectId = getCookie('itpm-projectId');
-    var URL = 'http://110.64.91.112:8081/api';
+    var URL = 'http://119.23.76.43/api';
     Vue.http.headers.common['Authorization'] = Token;
     
     var usr = new Vue({
@@ -366,7 +366,7 @@
         name=$('#taskName').val();
         startDate=normalizeDate($('#startDate').val());
         endDate=normalizeDate($('#endDate').val());
-        respsename=$('#respseName').val();
+        // respsename=$('#respseName').val();
         description=$('#taskDescription').val();
 
         $.ajax({

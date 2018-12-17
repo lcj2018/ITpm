@@ -58,10 +58,14 @@
             </div>
            
             <div class='row'>
-                    <div class='square'>
+                <div v-for='item in memberlist'>
+                    <div v-if='item.id==mission.uid'>
+                    <div v-bind:id='get2Id(item.userName,item.id)' class='square' data-toggle="modal" data-target="#delMemModal" onclick="alertDelMemModal(this)" src='./image/projectDetail/add.png'>
                         <div style='position:relative;top:20%;'><img src='./image/projectDetail/member.png' alt='member' /></div>
-                        <div style='position:relative;top:30%;'>{{memberlist[0].userName}}</div>
+                        <div style='position:relative;top:30%;'>{{item.userName}}</div>
                     </div>
+                    </div>
+                </div>
             </div>
             <br>
         
@@ -211,7 +215,7 @@
     var userId = getCookie('itpm-userId');
     var groupId = getCookie('itpm-groupId');
     var projectId = getCookie('itpm-projectId');
-    var URL = 'http://110.64.91.112:8081/api';
+    var URL = 'http://119.23.76.43/api';
     var missionId=getCookie('missionId');
     Vue.http.headers.common['Authorization']=Token;
     var vm = new Vue({

@@ -73,8 +73,8 @@
                                 <vuejs-datepicker id='startDate' placeholder='choose start date'></vuejs-datepicker>
                                 <label for='endDate'>结束日期：</label>
                                 <vuejs-datepicker id='endDate' placeholder='choose end date'></vuejs-datepicker><br/>
-                                <label for="respseName">项目负责人:</label>
-                                <input id='respName' type="text" class="form-control" style='width:50%;display:inline;' placeholder="respName" /><br/>
+                                <!-- <label for="respseName">项目负责人:</label>
+                                <input id='respName' type="text" class="form-control" style='width:50%;display:inline;' placeholder="respName" /><br/> -->
                                 <label for='taskDescription'>项目详情：</label><br/>
                                 <textarea id='taskDescription' rows='5' cols='45'></textarea>
                             </div>
@@ -95,7 +95,7 @@
 </div>
 </body>
 <script>
-    var URL = 'http://110.64.91.112:8081/api';
+    var URL = 'http://119.23.76.43/api';
     var Token = getCookie("itpm-token");
     var userId = getCookie('itpm-userId');
     var userName = getCookie('itpm-userName');
@@ -153,7 +153,7 @@
         startDate = normalizeDate(startDate);
         endDate = $('#endDate').val();
         endDate = normalizeDate(endDate);
-        respseName = $('#respName').val();
+        // respseName = $('#respName').val();
         taskDescription = $('#taskDescription').val();
 
         $.ajax({
