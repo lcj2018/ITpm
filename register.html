@@ -76,6 +76,8 @@
         </div>
 </div>  
 <script>
+        var URL = 'http://110.64.91.112:8081/api';
+
         $(document).ready(function(){
                 $('#wrapper').css('height',screen.availHeight.toString());
         })
@@ -95,7 +97,7 @@
                         alert('密码非法！应为5~20位。');
                         return;
                 }            
-                $.post('http://110.64.91.112:8081/api/registration',{userName: username,password: password,phone: phone},function(res){
+                $.post(URL+'/registration',{userName: username,password: password,phone: phone},function(res){
                         alert("注册成功，您的用户id为"+res.data.id);
                         window.location.href='./login.html';
                 },"json"),error(function(res){

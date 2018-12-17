@@ -95,6 +95,7 @@
 </div>
 </body>
 <script>
+    var URL = 'http://110.64.91.112:8081/api';
     var Token = getCookie("itpm-token");
     var userId = getCookie('itpm-userId');
     var userName = getCookie('itpm-userName');
@@ -121,7 +122,7 @@
             },
             methods:{
                 init:function(){
-                    this.$http.get('http://110.64.91.112:8081/api/projects').then(function(res){
+                    this.$http.get(URL+'/projects').then(function(res){
                         projects = res.data.data;
                         for(var i=0;i<projects.length;++i)
                             if(projects[i].gid==groupId)this.projectList.push(projects[i]);
@@ -157,7 +158,7 @@
 
         $.ajax({
             method: "POST",
-            url: "http://110.64.91.112:8081/api/projects",
+            url: URL+"/projects",
             data: {
                 name: taskName, 
                 description: taskDescription,

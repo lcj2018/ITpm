@@ -63,6 +63,7 @@
 </div>
 </body>
 <script>
+    var URL = "http://110.64.91.112:8081/api";
     var Token = getCookie("itpm-token");
     var userName = getCookie('itpm-userName');
     var userId = getCookie('itpm-userId');
@@ -88,7 +89,7 @@
             },
             methods:{
                 init:function(){
-                    this.$http.get('http://110.64.91.112:8081/api/groups').then(function(res){
+                    this.$http.get(URL+'/groups').then(function(res){
                         this.teamList = res.data.data;
                     },function(res){
                         alert('Err:'+res.data.message);

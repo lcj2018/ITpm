@@ -72,6 +72,7 @@
         </div>
 </div>  
 <script>
+        var URL = 'http://110.64.91.112:8081/api';
         $(document).ready(function(){
                 $('#wrapper').css('height',screen.availHeight.toString());
         })
@@ -90,7 +91,7 @@
                         alert('密码为空！');
                         return;
                 }
-                $.post("http://110.64.91.112:8081/api/authentication",{userName: username, password: password}).then(function(res,status,xhr){
+                $.post(URL+"/authentication",{userName: username, password: password}).then(function(res,status,xhr){
                         setCookie('itpm-userId',res.data.id);
                         setCookie('itpm-userName',res.data.userName);
                         setCookie('itpm-token',xhr.getResponseHeader('Authorization'));

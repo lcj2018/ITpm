@@ -133,6 +133,7 @@
 </div>
 </body>
 <script>
+	var URL = "http://110.64.91.112:8081/api";
 	var Token = getCookie("itpm-token");
     var userId = getCookie('itpm-userId');
     var userName = getCookie('itpm-userName');
@@ -176,7 +177,7 @@
 							console.log(xhr);
 					});
 					*/
-					this.$http.get('http://110.64.91.112:8081/api/resource?pid=' + projectId).then(function(res){
+					this.$http.get(URL+'/resource?pid=' + projectId).then(function(res){
 						this.project = res.data;
 					},function(res){
                         alert('Err:'+res.data.message);
@@ -200,7 +201,7 @@
 		snum = $('#sourceNum').val();
 		$.ajax({
             method: "POST",
-            url: "http://110.64.91.112:8081/api/resource",
+            url: URL+"/resource",
             data: {
                 name: snam, 
                 quantity: snum,
@@ -234,7 +235,7 @@
             };
 		$.ajax({
             method: "PUT",
-            url: "http://110.64.91.112:8081/api/resource",
+            url: URL+"/resource",
             data: JSON.stringify(send),
 			contentType:"application/json",
             dataType: "json",
