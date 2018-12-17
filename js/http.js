@@ -45,3 +45,21 @@ function normalizeDate(date)
     else date = str[2]+'-'+pos.toString()+'-'+str[0];
     return date;
 }
+
+function outDate(cname,cvalue){
+    var d = new Date();
+    d.setTime(d.getTime()+(-1*24*60*60*1000));
+    var expires = "expires="+d.toGMTString();
+    document.cookie = cname+"="+cvalue+"; "+expires;
+}
+
+function logout()
+{
+    outDate('itpm-token','Err');
+    outDate('itpm-groupId','Err');
+    outDate('itpm-projectId','Err');
+    outDate('itpm-missionId','Err');
+    outDate('itpm-userId','Err');
+    outDate('itpm-userName','Err');
+    window.location.href='./login.html';
+}

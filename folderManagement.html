@@ -9,6 +9,7 @@
         <link type="text/css" rel="stylesheet" href="./css/missionManagement.css" />
         <script type="text/javascript" src="https://cdn.staticfile.org/vue/2.2.2/vue.min.js"></script>
         <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.1.0/css/bootstrap.min.css">
+        <script src='./js/http.js'></script>
         <script src="https://cdn.staticfile.org/jquery/3.2.1/jquery.min.js"></script>
         <script src="https://cdn.staticfile.org/popper.js/1.12.5/umd/popper.min.js"></script>
         <script src="https://cdn.staticfile.org/twitter-bootstrap/4.1.0/js/bootstrap.min.js"></script>
@@ -22,7 +23,7 @@
                         <p class='pt-left'>项目开发管理系统</p>
                     </div>
                     <div class='col'>
-                        <p id='user' class='pt-right'>{{username}}&nbsp;&nbsp;<a href='#'>退出</a></p>
+                        <p id='user' class='pt-right'>{{username}}&nbsp;&nbsp;<a herf='#' onclick="logout()">退出</a></p>
                     </div>
                 </div>
             </div>
