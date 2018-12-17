@@ -248,6 +248,7 @@
                 delTeam:function(team){
                     // alert(team.id);
                     this.$http.delete(URL+'/groups/'+team.id.toString(),{enlateJSON: true}).then(function(res){
+                        window.location.reload()
                         alert('Success!');
                     },function(res){
                         alert('Err:' + res.data.message);
@@ -255,6 +256,7 @@
                 },
                 delMem:function(team,member){
                     this.$http.delete(URL+'/groups/'+team.id.toString()+'/users/'+member.id.toString(),{enlateJSON: true}).then(function(res){
+                        window.location.reload()
                         alert('Success!');
                     },function(res){
                         alert('Err:' + res.status);
@@ -297,6 +299,7 @@
                 res.setRequestHeader("Authorization",Token);
             },
             success: function(res){
+                window.location.reload()
                 alert('Success!');
             },
             error: function(res){
@@ -320,6 +323,7 @@
                 res.setRequestHeader("Authorization",Token);
             },
             success: function(res){
+                window.location.reload()
                 alert('Success!');
             },
             error: function(res){

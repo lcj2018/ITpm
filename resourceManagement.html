@@ -162,21 +162,6 @@
             },
             methods:{
 				init:function(){
-					/*
-					$.ajax({
-						type: "GET",
-						url: "http://110.64.91.112:8081/api/resource",
-						data:{
-							"pid": projectId
-						},
-						dataType: "xml",
-						//contentType: 'application/xml;charset=gb2312;'
-						}).success(function (res) {
-							console.log(res);
-						}).error(function (xhr, status) {
-							console.log(xhr);
-					});
-					*/
 					this.$http.get(URL+'/resource?pid=' + projectId).then(function(res){
 						this.project = res.data;
 					},function(res){
@@ -213,6 +198,7 @@
                 res.setRequestHeader("Authorization",Token);
             },
             success: function(res){
+				window.location.reload()
                 alert('Success!');
             },
             error: function(res){
@@ -243,6 +229,7 @@
                 res.setRequestHeader("Authorization",Token);
             },
             success: function(res){
+				window.location.reload()
                 alert('Success!');
             },
             error: function(res){
